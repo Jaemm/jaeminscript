@@ -1,6 +1,7 @@
-# How can I add a custom MDX component?
+# 사용자 정의 MDX 구성 요소를 어떻게 추가할 수 있나요?
 
-Here's an example on how to create a donut chart from Chart.js (assuming you already have the dependencies installed) and use it in MDX posts. First, create a new `DonutChart.tsx` component in `components`:
+다음은 Chart.js에서 도넛 차트를 만들고(종속성이 이미 설치되어 있다고 가정) MDX 게시물에 사용하는 방법에 대한 예입니다.
+먼저 `comComponents`에 새로운 `DonutChart.tsx` 구성 요소를 만듭니다.
 
 ```tsx
 'use client'
@@ -17,8 +18,8 @@ const DonutChart = ({ data }) => {
 export default Doughnut
 ```
 
-Since the underlying `Doughnut` component uses React hooks, we add the `'use client'` directive to specify that it is a client side component. Also, there is an existing issue which prevents named components from being used, so we need to export the component as the default export.
-
+기본 `Doughnut` 구성 요소는 React 후크를 사용하므로 `'use client'` 지시어를 추가하여 클라이언트 측 구성 요소임을 지정합니다.
+또한 명명된 구성 요소를 사용하지 못하게 하는 기존 문제가 있으므로 해당 구성 요소를 기본 내보내기로 내보내야 합니다.
 Next, add the component to `MDXComponents.tsx`:
 
 ```diff
@@ -35,7 +36,7 @@ export const components: MDXComponents = {
 }
 ```
 
-You can now use the component in `.mdx` files:
+이제 `.mdx` 파일에서 구성요소를 사용할 수 있습니다.
 
 ```mdx
 ## Example Donut Chart

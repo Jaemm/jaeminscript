@@ -1,10 +1,8 @@
-# How do I deploy on Github pages?
+# Github 페이지에 어떻게 배포하나요?
 
-[Demo](https://timlrx.github.io/tailwind-nextjs-starter-blog/) & [Source](https://github.com/timlrx/tailwind-nextjs-starter-blog/tree/test-gh-pages-static)
-
-1. Follow the section on creating a static build in the main README and test it locally to ensure that it works.
-2. Specify the base path in `next.config.js` to match your repository name e.g. `basePath: "/tailwind-nextjs-starter-blog"`.
-3. Modify `component/Image.tsx` to use the correct base path for the image source:
+1. 기본 README에서 정적 빌드 생성에 대한 섹션을 따르고 로컬에서 테스트하여 작동하는지 확인합니다.
+2. `next.config.js`에 저장소 이름과 일치하도록 기본 경로를 지정합니다. `basePath: "/tailwind-nextjs-starter-blog"`.
+3. 이미지 소스에 대한 올바른 기본 경로를 사용하도록 `comComponent/Image.tsx`를 수정합니다.
 
    ```tsx
    import NextImage, { ImageProps } from 'next/image'
@@ -16,37 +14,37 @@
    export default Image
    ```
 
-4. To automate deployment, here's a Github action that you could use
+4. 배포를 자동화하기 위해 사용할 수 있는 Github 작업은 다음과 같습니다.
 
 ```yml
-# Sample workflow for building and deploying a Next.js site to GitHub Pages
+# Next.js 사이트를 GitHub 페이지에 구축하고 배포하기 위한 샘플 워크플로
 #
-# To get started with Next.js see: https://nextjs.org/docs/getting-started
+# Next.js를 시작하려면 다음을 참조하세요: https://nextjs.org/docs/getting-started
 #
 name: Deploy Next.js site to Pages
 
 on:
-  # Runs on pushes targeting the default branch
+  # 기본 분기를 대상으로 하는 푸시에서 실행됩니다.
   push:
     branches: ['test-gh-pages-static']
 
-  # Allows you to run this workflow manually from the Actions tab
+  # 작업 탭에서 이 워크플로를 수동으로 실행할 수 있습니다.
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# GitHub 페이지에 배포할 수 있도록 GITHUB_TOKEN의 권한을 설정합니다.
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
-# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+# 진행 중인 실행과 최근 대기 중인 실행 사이에 대기 중인 실행을 건너뛰고 동시 배포를 하나만 허용합니다.
+# 그러나 이러한 프로덕션 배포가 완료되도록 하려면 진행 중인 실행을 취소하지 마십시오.
 concurrency:
   group: 'pages'
   cancel-in-progress: false
 
 jobs:
-  # Build job
+  # 작업 구축
   build:
     name: Build Nextjs Blog
     runs-on: ubuntu-latest
@@ -80,9 +78,9 @@ jobs:
         with:
           path: |
             .next/cache
-          # Generate a new cache whenever packages or source files change.
+          # 패키지나 소스 파일이 변경될 때마다 새 캐시를 생성합니다.
           key: ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-${{ hashFiles('**.[jt]s', '**.[jt]sx') }}
-          # If source files changed but packages didn't, rebuild from a prior cache.
+          # 소스 파일은 변경되었지만 패키지는 변경되지 않은 경우 이전 캐시에서 다시 빌드하세요.
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
@@ -94,7 +92,7 @@ jobs:
         with:
           path: ./out
 
-  # Deployment job
+  # 배포 작업
   deploy:
     environment:
       name: github-pages

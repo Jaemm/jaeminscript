@@ -1,7 +1,7 @@
 import { slug } from 'github-slugger'
 import { allCoreContent, sortPosts } from 'pliny/utils/contentlayer'
-import siteMetadata from '@/data/siteMetadata'
-import ListLayout from '@/layouts/ListLayoutWithTags'
+import siteMetadata from 'data/siteMetadata'
+import ListLayout from 'layouts/ListLayoutWithTags'
 import { allBlogs } from 'contentlayer/generated'
 import tagData from 'app/tag-data.json'
 import { genPageMetadata } from 'app/seo'
@@ -32,7 +32,7 @@ export const generateStaticParams = async () => {
 
 export default function TagPage({ params }: { params: { tag: string } }) {
   const tag = decodeURI(params.tag)
-  // Capitalize first letter and convert space to dash
+  // 첫 글자를 대문자로 만들고 공백을 대시로 변환합니다
   const title = tag[0].toUpperCase() + tag.split(' ').join('-').slice(1)
   const filteredPosts = allCoreContent(
     sortPosts(allBlogs.filter((post) => post.tags && post.tags.map((t) => slug(t)).includes(tag)))

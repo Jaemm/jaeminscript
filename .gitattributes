@@ -1,21 +1,21 @@
-## Source: https://github.com/alexkaratarakis/gitattributes
-## Modified * text=auto to * text=auto eol=lf eol=lf to force LF endings.
+## 출처: https://github.com/alexkaratarakis/gitattributes
+## LF 종료를 강제하도록 * text=auto를 * text=auto eol=lf eol=lf로 수정했습니다.
 
-## GITATTRIBUTES FOR WEB PROJECTS
+## 웹 프로젝트를 위한 GITATTRIBUTES
 #
-# These settings are for any web project.
+# 이 설정은 모든 웹 프로젝트에 적용됩니다.
 #
-# Details per file setting:
-#   text    These files should be normalized (i.e. convert CRLF to LF).
-#   binary  These files are binary and should be left untouched.
+# 파일 설정별 세부정보:
+# text 이 파일은 정규화되어야 합니다(예: CRLF를 LF로 변환).
+# 바이너리 이 파일은 바이너리이므로 그대로 두어야 합니다.
 #
-# Note that binary is a macro for -text -diff.
-######################################################################
+# 바이너리는 -text -diff에 대한 매크로입니다.
+############################################# ###################
 
-# Auto detect
-##   Force LF line endings automatically for files detected as
-##   text and leave all files detected as binary untouched.
-##   This will handle all files NOT defined below.
+# 자동 감지
+## 다음으로 감지된 파일에 대해 자동으로 LF 줄 끝을 강제 적용합니다.
+## 텍스트를 입력하고 바이너리로 감지된 모든 파일을 그대로 둡니다.
+## 아래에 정의되지 않은 모든 파일을 처리합니다.
 *                 text=auto eol=lf
 
 # Source code
@@ -139,8 +139,9 @@ Procfile          text
 *.psd             binary
 # SVG treated as an asset (binary) by default.
 *.svg             text
-# If you want to treat it as binary,
-# use the following line instead.
+
+# 바이너리로 처리하고 싶다면,
+# 대신 다음 줄을 사용하세요.
 # *.svg           binary
 *.svgz            binary
 *.tif             binary

@@ -1,10 +1,11 @@
-# How can I customize the `kbar` search?
+# `kbar` 검색을 어떻게 사용자 정의할 수 있나요?
 
-Add a `SearchProvider` component such as the one shown below and use it in place of the default `SearchProvider` component in `app/layout.tsx`.
+아래와 같은 `SearchProvider` 구성 요소를 추가하고 `app/layout.tsx`의 기본 `SearchProvider` 구성 요소 대신 사용합니다.
 
-`defaultActions` are the initial list of actions.
+`defaultActions`는 초기 작업 목록입니다.
 
-`onSearchDocumentsLoad` is a callback function that is called when the documents specified by `searchDocumentsPath` are loaded. Set `searchDocumentsPath` to `false` to disable the dynamically loaded search feature.
+'onSearchDocumentsLoad'는 'searchDocumentsPath'로 지정된 문서가 로드될 때 호출되는 콜백 함수입니다.
+동적으로 로드된 검색 기능을 비활성화하려면 `searchDocumentsPath`를 `false`로 설정하세요.
 
 ```tsx
 'use client'
@@ -56,7 +57,8 @@ export const SearchProvider = ({ children }) => {
 }
 ```
 
-You can even choose to do a full text search over the entire generated blog content though this would come at the expense of a larger search index file by modifying the `createSearchIndex` function in `contentlayer.config.ts` to:
+생성된 전체 블로그 콘텐츠에 대해 전체 텍스트 검색을 수행하도록 선택할 수도 있지만,
+`contentlayer.config.ts`의 `createSearchIndex` 기능을 다음과 같이 수정하면 더 큰 검색 색인 파일을 희생하게 됩니다.
 
 ```tsx
 function createSearchIndex(allBlogs) {
@@ -67,15 +69,15 @@ function createSearchIndex(allBlogs) {
     writeFileSync(
       `public/${siteMetadata.search.kbarConfig.searchDocumentsPath}`,
       JSON.stringify((sortPosts(allBlogs)))
-    )
+    )E
     console.log('Local search index generated...')
   }
 }
 ```
 
-Note the change from `JSON.stringify(allCoreContent(sortPosts(allBlogs)))` to `JSON.stringify((sortPosts(allBlogs)))`.
+`JSON.stringify(allCoreContent(sortPosts(allBlogs)))`에서 `JSON.stringify((sortPosts(allBlogs)))`로의 변경 사항에 유의하세요.
 
-Next, in the modified `SearchProvider`, dump the raw content to the `keywords` field in the `onSearchDocumentsLoad` prop:
+다음으로, 수정된 `SearchProvider`에서 원시 콘텐츠를 `onSearchDocumentsLoad` 소품의 `keywords` 필드에 덤프합니다.
 
 ```tsx
 onSearchDocumentsLoad(json) {

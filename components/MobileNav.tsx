@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from './Link'
-import headerNavLinks from '@/data/headerNavLinks'
+import headerNavLinks from 'data/headerNavLinks'
 
 const MobileNav = () => {
   const [navShow, setNavShow] = useState(false)
@@ -12,7 +12,7 @@ const MobileNav = () => {
       if (status) {
         document.body.style.overflow = 'auto'
       } else {
-        // Prevent scrolling
+        // 스크롤 방지
         document.body.style.overflow = 'hidden'
       }
       return !status

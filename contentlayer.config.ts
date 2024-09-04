@@ -58,7 +58,8 @@ const computedFields: ComputedFields = {
 }
 
 /**
- * Count the occurrences of all tags across blog posts and write to json file
+ * 
+블로그 게시물 전체에서 모든 태그의 발생 횟수를 계산하고 json 파일에 씁니다
  */
 function createTagCount(allBlogs) {
   const tagCount: Record<string, number> = {}

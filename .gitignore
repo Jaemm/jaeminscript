@@ -1,4 +1,4 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+# 파일 무시에 대한 자세한 내용은 https://help.github.com/articles/ignoring-files/를 참조하세요.
 
 # dependencies
 /node_modules

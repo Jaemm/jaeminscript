@@ -1,7 +1,7 @@
 /**
- * CSS Styles for code highlighting.
- * Feel free to customize token styles 
- * by copying from a prismjs compatible theme:
+ * 코드 강조를 위한 CSS 스타일.
+ * 토큰 스타일을 자유롭게 맞춤설정하세요. 
+ * prismjs 호환 테마에서 복사:
  * https://github.com/PrismJS/prism-themes
  */
 
@@ -42,11 +42,11 @@
 
 /* Token styles */
 /**
- * MIT License
- * Copyright (c) 2018 Sarah Drasner
- * Sarah Drasner's[@sdras] Night Owl
- * Ported by Sara vieria [@SaraVieira]
- * Added by Souvik Mandal [@SimpleIndian]
+ * MIT 라이센스
+ * 저작권 (c) 2018 Sarah Drasner
+ * Sarah Drasner[@sdras] Night Owl
+ * Sara vieria [@SaraVieira]가 포팅함
+ * Souvik Mandal [@SimpleIndian]이 추가했습니다.
  */
 .token.comment,
 .token.prolog,
