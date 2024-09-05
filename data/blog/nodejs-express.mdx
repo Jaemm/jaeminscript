@@ -1,0 +1,65 @@
+---
+title: 'Node.js-Express'
+date: '2023-05-26'
+lastmod: '2023-05-26'
+tags: ['Node.js']
+draft: false
+summary: 'Express.js란?, 왜 사용하는가?, 설치 방법'
+images: ['/static/images/']
+---
+
+![Github Traffic](/static/images/nodejs/express-logo.png)
+
+<TOCInline toc={props.toc} exclude="Introduction" />
+
+## 1. Express.js란?
+
+- 노드에 3rd party 프레임워크로 세부적인 내용들을 외부에 맡길 수 있도록 해주고
+- 더깔끔한 코드를 작성 할 수 있게 해준다.
+- 유틸리티 함수도 다수 제공
+
+## 2. 왜 사용하는가?
+
+- 유연하고, 특별한 기능들을 추가하지 않아도 된다.
+- 어플리케이션을 구축하거나, 유입되는 요청들을 처리함에 있어 높은 확장성을 지닌다.
+
+## 3. 설치 방법
+
+```
+npm install --save express
+```
+
+### --save dev가 아니라 --save인가?
+
+- 프로덕션 의존성 때문이다
+
+### 미들웨어는?
+
+- Epressjs는 미들웨어와 깊게 연관되어있다.
+- 미들웨어는 들어오는 요청을 Expressjs에 의해 다양한 함수를 통하여 자동으로 이동한다.
+- request -> middleware -> next() -> middleware -res.send() -> response -> ...
+  Expressjs는 하나의 함수를 이용하기보다는 분할로 처리하여 보낸다.
+
+### app.use
+
+```
+app.use(req, res, next)
+```
+
+- 요청 핸들러 배열을 여기로 받아들이며 여기로 온 함수들은 요청, 응답객체 그리고 next 인수로 온다.
+- next는 함수로 Expressjs를 통해서 전달된다 다음 미들웨어로 이동할 수 있도록 실행되어야한다
+- 위와같은 형식을 지닌 함수는 모두 미들웨어 이용에 사용할수 있다.
+  req, res, next를 모두 받는 함수라면 가능하다.
+
+### res.send
+
+```
+app.use('/add-test', (req, res, next) => {
+  res.send('<h1>the "add test" page</h1>');
+});
+```
+
+- send를 사용해서 응답을 보낼수 있다.
+- send method는 기본적으로 html 콘텐츠 유형을 선택한다.
+- write를 사용하여 보내는것보다 쉽다.
+- 특히 파일을 전송할때 더 쉽게 이용할수있다.

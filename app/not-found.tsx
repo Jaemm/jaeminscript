@@ -12,9 +12,7 @@ export default function NotFound() {
         <p className="mb-4 text-xl font-bold leading-normal md:text-2xl">
           찾을수없는 페이지 입니다.
         </p>
-        <p className="mb-8">
-          "하지만 걱정하지 마세요. 저희 홈페이지에서 다른 많은 정보도 찾으실 수 있습니다"
-        </p>
+        <p className="mb-8">관리자에게 문의하세요</p>
         <Link
           href="/"
           className="focus:shadow-outline-blue inline rounded-lg border border-transparent bg-blue-600 px-4 py-2 text-sm font-medium leading-5 text-white shadow transition-colors duration-150 hover:bg-blue-700 focus:outline-none dark:hover:bg-blue-500"

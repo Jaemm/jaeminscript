@@ -1,0 +1,81 @@
+---
+title: 'RasberryPi-부팅시 스크립트 자동실행'
+date: '2024-04-26'
+lastmod: '2024-04-26'
+tags: ['RasberryPi']
+draft: false
+summary: 'rc.local이란?, 파일 활성화'
+images: ['/static/images/']
+---
+
+![rasberrypi logo image](/static/images/rasberrypi/rasberrypi-logo.svg)
+
+<TOCInline toc={props.toc} exclude="Introduction" />
+
+## 1. rc.local이란?
+
+부팅시 자동실행 명령어 스크립트 수행하며 일반적으로 서버 부팅시마다 매번 자동 실행되길 원하는 명령어를 넣어주는 곳.
+
+필자는 라즈베리파이 내에서 Modbus Data를 송수신하여 MQTT Server로 송수신하는 Python 코드를 실행시키기 위하여 해당 방법을 사용함.
+
+## 2. 터미널 열기
+
+- 터미널 실행
+
+```
+Ctrl + Alt + T
+```
+
+## 3. 파일 활성화
+
+```
+sudo /etc/rc.local
+```
+
+## 4. Python 경로 수정
+
+![rclocal 편집 화면](/static/images/rasberrypi/rasberrypi-rclocal.png)
+
+- rc.local 파일 열기
+
+```
+sudo nano /etc/rc.local
+```
+
+- 첫번째 줄 수정
+
+```
+기존: #!/bin/sh
+변경: #!/bin/python3
+```
+
+## 5. 스크립트 추가
+
+```
+LOG_FILE="/var/log/rc.local.log"
+date > $LOG_FILE 2>&1
+/usr/bin/python3
+{자동실행을 원하는 코드파일 경로 입력} &
+date >> $LOG_FILE 2>&1
+```
+
+- Ctrl + X -> Y -> Enter 입력으로 저장하기
+
+## 6. 해당 파일 스크립트 실행 권한 추가
+
+```
+sudo chmod +x /etc/rc.local
+```
+
+## 7. 재실행
+
+```
+sudo reboot
+```
+
+## 8. 서비스 상태 확인
+
+```
+systemctl status rc-local //rc-local 상태 확인
+ps aux | grep python //python 코드 실행 목록 표시
+```

@@ -1,0 +1,116 @@
+---
+title: 'RasberryPi-CAN 통신'
+date: '2023-12-10'
+lastmod: '2023-12-10'
+tags: ['RasberryPi']
+draft: false
+summary: 'CAN 통신이란?, CAN통신 활성화'
+images: ['/static/images/']
+---
+
+![rasberrypi logo image](/static/images/rasberrypi/rasberrypi-logo.svg)
+
+<TOCInline toc={props.toc} exclude="Introduction" />
+
+## 1. CAN 통신이란?
+
+CAN(Controller Area Network)이란, 차량 내에서 호스트 컴퓨터 없이 마이크로 컨트롤러나 장치들이 서로 통신하기 위해 설계된 표준 통신 규격입니다.
+
+필자는 Raspi에서 CAN통신을 하기위해 Waveshare사의 RS485 CAN HAT모듈을 사용했다.
+모듈 링크 첨부(https://www.waveshare.com/wiki/RS485_CAN_HAT)
+![rasberrypi can 모듈](/static/images/rasberrypi/rasberrypi-can.png)
+
+## 2. CAN 모듈 활성화 설정
+
+- config.txt 파일 수정
+
+```
+sudo nano /boot/config.txt
+```
+
+- 아래 내용 추가
+
+```
+dtparam=spi=on
+dtoverlay=mcp2515-can0,oscillator=12000000,interrupt=25,spimaxfrequency=2000000
+```
+
+## 3. CAN 채널 테스트 유틸리티 다운로드
+
+```
+sudo apt-get install can-utils
+```
+
+- 터미널 창에서 아래 스크립트 입력시 CAN data Receive 해볼수 있다.
+
+```
+candump can0
+```
+
+## 4. CAN 활성화
+
+```
+sudo ip link set can0 up type can bitrate 125000
+```
+
+## 5. 장치 확인
+
+- 터미널 창에서 ifconfig를 통해서 장치를 확인할 수 있다.
+
+아래 같이 can0가 표시되면 정상 인식 된것.
+![rasberrypi can 모듈 조회](/static/images/rasberrypi/rasberrypi-can2.png)
+
+## 6. 부팅시 자동 설정
+
+- 해당파일 열기
+
+```
+sudo nano /etc/network/interfaces
+```
+
+- 아래 내용 추가
+
+```
+auto can0
+iface can0 can static
+bitrate 125000
+```
+
+## 7. 예제코드
+
+- Receive 코드(Python)
+
+```
+import os
+import can
+
+os.system('sudo ip link set can0 type can bitrate 100000')
+os.system('sudo ifconfig can0 up')
+
+can0 = can.interface.Bus(channel = 'can0', bustype = 'socketcan')# socketcan_native
+
+#msg = can.Message(arbitration_id=0x123, data=[0, 1, 2, 3, 4, 5, 6, 7], is_extended_id=False)
+msg = can0.recv(10.0)
+print (msg)
+if msg is None:
+    print('Timeout occurred, no message.')
+
+os.system('sudo ifconfig can0 down')
+```
+
+- Send 코드(Python)
+
+```
+import os
+import can
+
+os.system('sudo ip link set can0 type can bitrate 100000')
+os.system('sudo ifconfig can0 up')
+
+can0 = can.interface.Bus(channel = 'can0', bustype = 'socketcan')# socketcan_native
+
+msg = can.Message(arbitration_id=0x123, data=[0, 1, 2, 3, 4, 5, 6, 7], is_extended_id=False)
+can0.send(msg)
+
+os.system('sudo ifconfig can0 down')
+```

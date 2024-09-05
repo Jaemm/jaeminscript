@@ -1,0 +1,80 @@
+---
+title: 'Github-프로필 꾸미기'
+date: '2024-03-04'
+lastmod: '2024-03-04'
+tags: ['Github']
+draft: false
+summary: 'userid/readme.md 수정하기,  Shields.io: 본문에 뱃지 넣기, stat 표시하기,  Pined repo 활용하기'
+images: ['/static/images/']
+---
+
+![aws-ec2-logo](/static/images/github/github-logo.png)
+
+<TOCInline toc={props.toc} exclude="Introduction" />
+
+## 1. userid/readme.md 수정하기
+
+깃허브에는 본인 닉네임 레포지토리 만들기로 인사말 기능을 만들수있다
+
+`repositories > new > repository name에 userid 입력 > public > create repository`
+![github-profile 레파짓 등록](/static/images/github/github-profile-setting.png)
+
+해당 레포지토리를 만들면 자동으로 README.md 파일이 등록된다.
+
+아래처럼 주석으로 간단한 설명이 존재
+![github-profile readme 본문](/static/images/github/github-profile-setting2.png)
+
+## 2. Shields.io: 본문에 뱃지 넣기
+
+README.md에 아래 코드 추가
+
+```
+<img src="https://img.shields.io/badge/React-61DAFB?
+    style=flat-square&logo=React&logoColor=white"/>
+```
+
+로고는 링크에서 확인 가능 https://simpleicons.org/
+![github-profile readme 본문](/static/images/github/github-profile-setting3.png)
+
+![github-profile readme 본문](/static/images/github/github-profile-setting4.png)
+
+## 3. anuraghazra/github-readme-stats README에서 stat 표시하기
+
+README.md에 아래 코드 추가
+
+```
+![Anurag's GitHub stats](https://github-readme-stats.vercel.app/api?username=Jaemm&show_icons=true&theme=radical)
+```
+
+![github-profile readme 본문](/static/images/github/github-profile-setting5.png)
+
+## 4. Pined repo 활용하기
+
+README 아래 pinned 부분에 내 repository들을 핀으로 지정해서 미리보기 할수 있는 공간이 있다 아래와 같이 꾸며보자
+![github-profile readme 본문](/static/images/github/github-profile-setting6.png)
+
+- prodcutive-box 커밋시각 통계 노출
+  ![github-profile readme 본문](/static/images/github/github-profile-setting7.png)
+
+우선 해당 레포지토리를 fork한다 (https://github.com/techinpark/productive-box)
+
+github gist 에 들어가서 새로운 public gist를 생성한다(https://gist.github.com/)
+
+![github-profile readme 본문](/static/images/github/github-profile-setting8.png)
+내용은 아무렇게나 작성해도 된다
+
+중요. create public gist를 클릭, 해당 페이지 url에서 https://gist.github.com/사용자아이디/해당 부분 기억하기
+
+github 보안 토큰 생성
+`settings > developer settings > personal access tokens > tokens
+repo, user, gist 선택`한 채로 생성
+이때 토큰을 꼭 복사해 두어야한다(다시 확인이 불가)
+
+fork한 레포지토리의 .github/workflow/Schedule.yml 파일을 수정하여 환경변수 작성
+해당 레포지토리 `settings로 이동 > security > secrets and variables > actions > new repository secret 생성`
+
+![github-profile readme 본문](/static/images/github/github-profile-setting9.png)
+GH_TOKEN, GIST_ID 입력
+
+- 내 프로필에서 gist pin 고정
+  ![github-profile readme 본문](/static/images/github/github-profile-setting10.png)
