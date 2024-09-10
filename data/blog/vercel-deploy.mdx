@@ -1,0 +1,75 @@
+---
+title: 'React.js-Vercel Next 배포 방법'
+date: '2024-09-10'
+lastmod: '2024-09-10'
+tags: ['REACTJS']
+draft: false
+summary: 'NEXT.JS, VERCEL'
+images: ['/static/images/reactjs/vercel-logo.png']
+---
+
+![aws-ec2-logo](/static/images/reactjs/vercel-logo.png)
+
+<TOCInline toc={props.toc} />
+
+## 1. Vercel이란?
+
+Vercel은 Next.js 개발 팀에서 만든 프론트엔드 배포 자동화할 수 있게 빌드,배포,호스팅 서비스를 제공하는 호스팅 사이트이다.
+
+비슷한 서비스로는 Netlify가 있다.
+
+Vercel은 GitHub, GitLab, Bitbucket 등의 버전 관리 시스템과 연동하여 코드 변경이 발생하면 자동으로 빌드하고 배포할 수 있다.
+
+이로써 개발자는 별도의 배포 작업 없이도 변경사항을 신속하게 고객에게 제공할 수 있다.
+
+## 2. 배포하기
+
+https://vercel.com/ 👈 vercel 사이트에 접속해서 회원가입을 해준다.
+
+start deploying을 누르면
+
+Import Git Repository를 할 수 있는 페이지가 나온다.
+
+나는 github을 사용하기 때문에 Continue with GitHub을 누르고 Import Git Repository에서 github에 있는 내 repository에서 import해 올 repo를 선택한다.
+
+import해 온 repo에서 import 버튼을 누르면 Configure Project라고 deploy하기위한 설정을 해주는 페이지가 나온다.
+
+## 3. 설정하기
+
+- ProjectName: project의 name을 설정해주는 곳으로 배포된 프로젝트의 이름을 지정하는 역할을 한다.
+
+- Framework Preset: 프로젝트를 빌드하고 배포하는 데 사용할 프레임워크 또는 런타임 환경에 필요한 빌드 및 배포 설정을 자동으로 구성해준다.
+  그래서 프로젝트를 특정 프레임워크 또는 런타임에 최적화된 설정으로 빠르고 쉽게 배포할 수 있도록 해준다.
+
+- Root Directory: 프로젝트의 루트 디렉토리를 가리킨다. 이 디렉토리는 프로젝트의 모든 파일과 하위 디렉토리를 포함하는 최상위 폴더를 나타내는데, Vercel은 이 루트 디렉토리 내의 파일을 기반으로 프로젝트를 빌드하고 배포한다.
+
+- Build and Output Settings 설정
+  Build Command: 프로젝트를 빌드하기 위해 실행되는 커맨드를 지정한다.
+  일반적으로는 프로젝트의 빌드 스크립트를 실행하는 명령어를 입력한다.
+
+- Output Directory: 빌드 결과물이 생성되는 위치를 지정한다.
+  이 디렉토리에는 빌드된 파일들이 저장된다.
+  기본적으로는 프로젝트의 루트 디렉토리에 생성되는 것이 일반적이다.(react 경우 build , next 경우 .next 파일로 build 되게 된다.)
+
+- Development Command: 로컬 개발 환경에서 사용하는 명령어를 지정할 수 있다.
+  이 명령어를 사용하면 로컬 환경에서 프로젝트를 실행할 수 있다.
+  이 설정을 사용하여 프로젝트의 빌드 과정을 커스터마이징하거나 빌드 결과물을 원하는 디렉토리에 배치할 수 있다.
+  이렇게 설정한 후 Vercel에 프로젝트를 배포하면 지정한 설정대로 빌드가 수행되며 배포된다.
+
+## 4. 주의점
+
+그 전에 또 다른 설정란인 Environment Variables도 있는데,
+
+Add Environment Variable: 변수 이름과 값으로 새로운 환경 변수를 추가할 수 있다.
+
+환경 변수를 사용하면 비밀 키, API 토큰, 데이터베이스 연결 정보 등의 중요한 정보를 코드 내에 노출하지 않고 안전하게 관리할 수 있다.
+
+이를 통해 프로젝트의 보안을 강화하고 민감한 정보를 관리하는 데 도움이 된다.
+
+Vercel에서 설정한 환경 변수는 프로젝트 내에서 process.env 객체를 통해 접근할 수 있다.
+
+환경변수를 사용했다면 Environment Variables 설정을 해주고 배포하자
+
+## 5. 결과
+
+최종적으로 이제 deploy 버튼을 눌러서 별 이상이 없다면 배포가 완료된다.
