@@ -20,7 +20,7 @@ const projectsData: Project[] = [
   },
   {
     title: '반도체설비 유독가스 감지, 제어 모니터링',
-    description: `천장형, 멀티형, 키오스크, 전기차 충전기`,
+    description: `VMB, GC, GD`,
     imgSrc: '/static/images/project/fmcs.jpg',
     href: '/404',
   },
