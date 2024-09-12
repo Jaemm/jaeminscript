@@ -1,0 +1,118 @@
+---
+title: '무료 SSL/TLS 인증서 Cerbot'
+date: '2024-09-12'
+lastmod: '2024-09-12'
+tags: ['nodejs']
+draft: false
+summary: 'Git 명령어 모음'
+images: ['/static/images/']
+---
+
+![aws-ec2-logo](/static/images/cerbot-logo.png)
+
+<TOCInline toc={props.toc} exclude="Introduction" />
+
+## 1. Cerbot이란?
+
+certbot은 Let's Encrypt에서 무료 SSL/TLS 인증서를 발급하고 자동으로 갱신해주는 도구입니다.
+
+Let's Encrypt는 무료로 SSL 인증서를 발급해주는 인증 기관(CA)이며, certbot은 이를 관리하는 가장 널리 사용되는 클라이언트입니다.
+
+웹 서버에서 HTTPS를 활성화하고 보안 통신을 설정할 때 매우 유용합니다.
+
+## 2. Cerbot의 주요 기능
+
+- SSL/TLS 인증서 발급: 도메인에 대해 무료 SSL 인증서를 발급받아 HTTPS를 설정할 수 있습니다.
+
+- 자동 갱신: Let's Encrypt의 인증서는 90일 동안만 유효합니다. Certbot은 자동으로 인증서를 갱신하여 HTTPS 서비스를 중단 없이 유지할 수 있습니다.
+
+- 웹 서버 설정 자동화: Certbot은 Nginx, Apache와 같은 웹 서버와 통합되어 SSL 인증서를 발급하고 자동으로 서버 설정을 업데이트해줍니다.
+
+## 3. Certbot 설치 및 사용 방법
+
+### 3-1. Certbot 설치
+
+OS에 따라 Certbot을 설치하는 방법이 다릅니다.
+
+일반적으로 다음과 같은 명령을 사용하여 설치합니다:
+
+```
+sudo apt update
+sudo apt install certbot python3-certbot-nginx
+```
+
+```
+sudo yum install certbot python3-certbot-nginx
+```
+
+### 3-2. 인증서 발급
+
+Let's Encrypt 인증서를 발급받기 위해 Certbot을 실행하고,
+
+Nginx 또는 Apache와 같은 웹 서버에 적용할 수 있습니다.
+
+예를 들어, Nginx 서버에서 example.com 도메인에 대해 SSL 인증서를 발급받으려면 다음과 같이 실행합니다
+
+```
+sudo certbot --nginx -d example.com -d www.example.com
+```
+
+위 명령은 다음을 수행합니다
+
+    - nginx: Nginx 서버 설정을 자동으로 수정합니다.
+    - d: SSL 인증서를 발급할 도메인 이름을 지정합니다. 여러 도메인도 동시에 입력할 수 있습니다.
+    - Certbot은 도메인 소유권을 확인하기 위해 웹 서버를 통해 ACME 챌린지를 진행하고, 도메인이 소유한 서버임을 증명하면 인증서를 발급합니다.
+
+### 3-3. 갱신
+
+Certbot은 인증서가 만료되기 전에 자동으로 갱신할 수 있는 기능을 제공합니다.
+
+자동갱신 방법은 따로 포스팅 하겠습니다
+[Cerbot 자동 갱신 방법](/static/images/cerbot-logo.png)
+
+- 수동 갱신 방법
+
+```
+sudo certbot renew
+```
+
+renew 명령어는 만료가 임박한 인증서를 수동으로 갱신합니다.
+
+### 3-4. 인증서 상태 확인
+
+발급받은 인증서의 유효 기간이나 기타 상태를 확인하려면 다음 명령을 사용할 수 있습니다
+
+```
+sudo openssl x509 -in /etc/letsencrypt/live/example.com/fullchain.pem -text -noout
+```
+
+또는 Certbot 자체 명령으로도 상태를 확인할 수 있습니다
+
+```
+sudo certbot certificates
+```
+
+### 3-5. 웹 서버 재설정
+
+Certbot이 인증서를 발급하고 갱신한 후에는 Nginx나 Apache와 같은 웹 서버를 다시 로드해야 합니다.
+
+Certbot이 이를 자동으로 처리해주기도 하지만, 수동으로 필요한 경우 다음 명령어를 사용할 수 있습니다
+
+```
+sudo systemctl reload nginx
+```
+
+```
+sudo systemctl reload apache2
+```
+
+## 4. Certbot을 사용할 때 주의할 점
+
+- 인증서 갱신 주기: 인증서는 90일 동안만 유효하므로, 자동 갱신이 잘 동작하고 있는지 확인하는 것이 중요합니다.
+  주기적으로 갱신 상태를 확인하는 것이 좋습니다.
+
+- 도메인 소유권: Certbot은 도메인 소유권을 검증해야 하므로, 도메인 설정이 정확히 되어 있어야 합니다.
+
+- 방화벽 설정: Certbot은 HTTP(포트 80) 및 HTTPS(포트 443)를 통해 Let's Encrypt 서버와 통신하므로, 방화벽 설정에서 해당 포트를 허용해야 합니다.
+
+Certbot은 무료로 SSL 인증서를 간편하게 발급받을 수 있는 매우 유용한 도구이며, 설정이 잘 되어 있으면 자동으로 갱신되기 때문에 웹사이트 보안 관리를 쉽게 할 수 있습니다.

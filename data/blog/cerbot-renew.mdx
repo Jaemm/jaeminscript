@@ -1,0 +1,27 @@
+---
+title: 'Cerbot 자동갱신 설정 방법'
+date: '2024-09-12'
+lastmod: '2024-09-12'
+tags: ['nodejs']
+draft: false
+summary: 'Git 명령어 모음'
+images: ['/static/images/']
+---
+
+![aws-ec2-logo](/static/images/cerbot-logo.png)
+
+<TOCInline toc={props.toc} exclude="Introduction" />
+
+Certbot을 사용하여 발급받은 SSL 인증서는 기본적으로 90일 동안 유효합니다.
+
+이를 자동으로 갱신하지 않으면 인증서가 만료되어 HTTPS 연결이 끊길 수 있으므로, 자동 갱신을 설정하는 것이 중요합니다.
+
+## Certbot 자동 갱신 설정 방법
+
+Certbot은 자동으로 갱신 작업을 처리하도록 이미 준비된 기능을 제공하며, 대부분의 시스템에서는 `cron job` 또는 `systemd timer`를 사용하여 이를 자동화합니다.
+
+### 1. Certbot 자동 갱신 명령 확인
+
+Certbot은 자동 갱신을 위한 명령어를 제공합니다.
+
+이를 실행하면 인증서의 유효성을 확인하고, 갱신이 필요한 경우 자동으로 갱신합니다.
