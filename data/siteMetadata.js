@@ -3,7 +3,7 @@ const siteMetadata = {
   title: 'JaeminScript',
   author: '최재민',
   headerTitle: 'JaeminScript',
-  description: '안녕하세요. 3년차 백엔드 개발자 최재민입니다.',
+  description: '안녕하세요. 3년차 웹 개발자 최재민입니다.',
   language: 'en-us',
   theme: 'system', // system, dark or light
   siteUrl: 'https://jaeminscript.vercel.app',
