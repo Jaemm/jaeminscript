@@ -12,7 +12,7 @@ export default function Home({ posts }) {
       <div className="divide-y divide-gray-200 dark:divide-gray-700">
         <div className="space-y-2 pb-8 pt-6 md:space-y-5">
           <h1 className="text-3xl font-extrabold leading-9 tracking-tight text-gray-800 dark:text-gray-100 sm:text-2xl sm:leading-10 md:text-4xl md:leading-14">
-            👋 안녕하세요, 저는 최재민입니다.
+            👋 안녕하세요, 최재민입니다.
           </h1>
           <p className="text-lg leading-7 text-gray-800 dark:text-gray-400">
             머물러 있지 않고 성장하는 개발자가 되고싶습니다. <br />
@@ -21,7 +21,7 @@ export default function Home({ posts }) {
           </p>
           <p className="text-lg leading-7 text-gray-800 dark:text-gray-400">
             배움을 나누며 함께 성장하는 것을 좋아합니다. <br />
-            블로그를 운영하고, 다양한 주제에 대해 공유하겠습니다.🔥 <br />
+            블로그를 운영하고, 다양한 주제에 대해 공유하겠습니다. <br />
           </p>
           <br />
           <br />

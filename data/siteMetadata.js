@@ -13,13 +13,6 @@ const siteMetadata = {
   mastodon: 'https://mastodon.social/@mastodonuser',
   email: 'noah00955@gmail.com',
   github: 'https://github.com/Jaemm',
-  // x: 'https://twitter.com/x',
-  // twitter: 'https://twitter.com/Twitter',
-  // facebook: 'https://facebook.com',
-  // youtube: 'https://youtube.com',
-  // linkedin: 'https://www.linkedin.com',
-  // threads: 'https://www.threads.net',
-  // instagram: 'https://www.instagram.com',
   locale: 'en-US',
   analytics: {
     // 분석 제공자를 사용하려면 이를
@@ -55,26 +48,16 @@ const siteMetadata = {
     // https://vercel.com/docs/environment-variables
     provider: 'giscus', // supported providers: giscus, utterances, disqus
     giscusConfig: {
-      // 아래 링크를 방문하여 '구성' 섹션의 단계를 따르세요.
-      // https://giscus.app/
       repo: process.env.NEXT_PUBLIC_GISCUS_REPO,
       repositoryId: process.env.NEXT_PUBLIC_GISCUS_REPOSITORY_ID,
       category: process.env.NEXT_PUBLIC_GISCUS_CATEGORY,
       categoryId: process.env.NEXT_PUBLIC_GISCUS_CATEGORY_ID,
       mapping: 'pathname', // 지원되는 옵션: 경로 이름, URL, 제목
       reactions: '1', // 이모티콘 반응: 1 = 활성화 / 0 = 비활성화
-      // 정기적으로 토론 메타데이터를 상위 창에 보냅니다. 1 = 활성화 / 0 = 비활성화
       metadata: '0',
-      // 테마 예: light, dark, dark_dimmed, dark_high_contrast
-      // transparent_dark, preferred_color_scheme, custom
       theme: 'light',
-      // theme when dark mode
       darkTheme: 'transparent_dark',
-      // 위 테마 옵션이 'custom'으로 설정된 경우
-      // 사용자 정의 테마 CSS 파일에 대한 링크를 아래에 제공하십시오.
-      // example: https://giscus.app/themes/custom_example.css
-      themeURL: '',
-      // 이는 Giscus 구성의 `data-lang="en"`에 해당합니다
+      themeURL: 'https://github.com/Jaemm/blog',
       lang: 'kr',
     },
   },

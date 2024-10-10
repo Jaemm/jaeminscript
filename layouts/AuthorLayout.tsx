@@ -33,8 +33,9 @@ export default function AuthorLayout({ children, content }: Props) {
             <h3 className="pb-2 pt-4 text-2xl font-bold leading-8 tracking-tight">{name}</h3>
             <div className="text-gray-500 dark:text-gray-400">{occupation}</div>
             <br></br>
-            <div className="text-gray-500 dark:text-gray-400">수원과학대학교 / 컴퓨터정보과</div>
+            <div className="text-gray-500 dark:text-gray-400">수원과학대학교(2014.03~2019.03)</div>
             <br></br>
+            <div className="text-gray-500 dark:text-gray-400">SK네트웍스서비스(2019.11~2021.11)</div>
             <div className="text-gray-500 dark:text-gray-400">{company}</div>
             <div className="flex space-x-3 pt-6">
               <SocialIcon kind="mail" href={`mailto:${email}`} />

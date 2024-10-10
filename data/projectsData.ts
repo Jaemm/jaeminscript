@@ -7,16 +7,16 @@ interface Project {
 
 const projectsData: Project[] = [
   {
-    title: '스마트팜 모니터링 플랫폼',
-    description: `React, Node, AWS`,
-    imgSrc: '/static/images/project/smartfarm.png',
-    href: '/blog/smartfarm'
-  },
-  {
     title: '이동식전원공급장치 모니터링 플랫폼',
     description: `React, Node, AWS`,
     imgSrc: '/static/images/project/bms.jpg',
     href: '/blog/bfcs/',
+  },
+  {
+    title: '스마트팜 모니터링 플랫폼',
+    description: `React, Node, AWS`,
+    imgSrc: '/static/images/project/smartfarm.png',
+    href: '/blog/smartfarm'
   },
   {
     title: '반도체설비 유독가스 감지, 제어 모니터링',
