@@ -13,7 +13,7 @@ const siteMetadata = {
   mastodon: 'https://mastodon.social/@mastodonuser',
   email: 'noah00955@gmail.com',
   github: 'https://github.com/Jaemm',
-  locale: 'en-US',
+  locale: 'kr',
   analytics: {
     // 분석 제공자를 사용하려면 이를
     // `next.config.js` 파일의 콘텐츠 보안 정책.
@@ -57,8 +57,8 @@ const siteMetadata = {
       metadata: '0',
       theme: 'light',
       darkTheme: 'transparent_dark',
-      themeURL: 'https://github.com/Jaemm/blog',
-      lang: 'kr',
+      themeURL: '',
+      lang: 'ko',
     },
   },
   search: {
