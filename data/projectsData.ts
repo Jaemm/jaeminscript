@@ -9,7 +9,7 @@ const projectsData: Project[] = [
   {
     title: '스마트팜 모니터링 플랫폼',
     description: `React, Node, AWS`,
-    imgSrc: '/static/images/project/main.png',
+    imgSrc: '/static/images/project/smartfarm.png',
     href: '/blog/smartfarm'
   },
   {
