@@ -37,9 +37,8 @@ const siteMetadata = {
     // },
   },
   newsletter: {
-    // mailchimp, buttondown, 변환 키트, klaviyo, revue, emailoctopus 지원
-    // .env 파일을 추가하고 선택 사항에 따라 수정하세요.
-    provider: 'buttondown',
+    // mailchimp, buttondown, klaviyo, revue, emailoctopus 지원
+    provider: 'emailoctopus',
   },
   comments: {
     // 분석 제공자를 사용하려면 이를

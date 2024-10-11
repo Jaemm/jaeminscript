@@ -1,4 +1,4 @@
-# Tailwind Nextjs 스타터 블로그
+# Tailwind Nextjs 블로그
 
 ## 특징
 
@@ -24,14 +24,12 @@ Typescript를 사용한 Next.js
 - [next/image](https://nextjs.org/docs/basic-features/image-optimization)를 통한 자동 이미지 최적화
 - 태그 지원 - 각 고유 태그는 자체 페이지가 됩니다.
 - 여러 저자 지원
-- 3가지 다른 블로그 레이아웃
-- 2개의 다른 블로그 목록 레이아웃
 - 블로그 게시물의 중첩 라우팅 지원
 - 프로젝트 페이지
 - 사전 구성된 보안 헤더
 - RSS 피드, 사이트맵 등을 통해 SEO 친화적입니다!
 
-## 빠른 시작 가이드
+## 시작 가이드
 
 1. Clone the repo
 
