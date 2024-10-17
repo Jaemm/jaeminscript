@@ -2,9 +2,9 @@
 title: '스마트팜 프로젝트'
 date: '2024-10-10'
 lastmod: '2024-10-17'
-tags: ['smartfarm']
+tags: ['electron']
 draft: false
-summary: 'React, Node, AWS'
+summary: 'electron'
 images: ['/static/images/']
 ---
 
@@ -13,14 +13,15 @@ images: ['/static/images/']
 ## 목차
   <TOCInline toc={props.toc} exclude="Introduction" />
   
-## 프로젝트 개요
+## 1. 프로젝트 개요
 - 프로젝트명: 스마트팜 관제 플랫폼
 - 기간: 2022.11 ~ 2023.11
 - 요약: 스마트팜 환경을 실시간으로 모니터링하고, 자동화된 제어 시스템을 통해 작
 물의 최적 성장 환경을 관리하는 시스템 구축
 - 역할: 시스템 설계, 프론트엔드/백엔드 개발, 실시간 데이터 처리 및 통계 분석
+이번 포스트에서는 Electron의 기본 개념과 애플리케이션이 어떻게 구성되는지 설명하겠습니다.
 
-## 기술 스택
+## 2. 기술 스택
 - 프론트엔드: React.js, Next.js
 - 상태 관리: Recoil, Redux
 - 백엔드: Node.js, Express.js
@@ -31,10 +32,10 @@ images: ['/static/images/']
 - 환경 설정: Dotenv, Cross-env
 - 빌드 도구: PM2, Concurrently, Nodemon
 
-## 플로우 차트
+## 3. 플로우 차트
 ![projects-bms](/static/images/project/smartfarmflow.png)
 
-## 주요성과
+## 4. 주요성과
 - 시스템 설계 및 아키텍처 구축
 
 프론트엔드는 React.js와 Next.js로, 백엔드는 Node.js와 Express.js로 구축하여 실시간 작물 상태 데이터를 수집하고 통신
@@ -65,7 +66,8 @@ WebSocket을 활용해 실시간 작물 상태를 대시보드에 반영하고, 
 AWS EC2와 S3를 사용해 시스템 배포, 서버 성능 및 안정성 유지
 시스템 모니터링 및 유지 관리로 안정적인 서비스 제공
 
-## 서비스 스크린샷
+
+## 5. 서비스 스크린샷
 ![projects-bms](/static/images/project/smartfarm.png)
 ![projects-bms](/static/images/project/smartfarm1.png)
 ![projects-bms](/static/images/project/smartfarm2.png)
