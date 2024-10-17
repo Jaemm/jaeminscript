@@ -1,0 +1,250 @@
+---
+title: 'GraphQL 시리즈 2_GraphQL 스키마와 쿼리 구조 이해하기'
+date: '2024-10-14'
+lastmod: '2024-10-08'
+tags: ['graphql']
+draft: false
+summary: 'graphql'
+images: ['/static/images/']
+---
+
+![graphql](/static/images/graphql/graphqllogo.png)
+
+## 목차
+  <TOCInline toc={props.toc} exclude="Introduction" />
+
+## 1. 서론
+GraphQL에서 가장 중요한 개념 중 하나는 **스키마(schema)**입니다. 
+
+스키마는 클라이언트와 서버가 데이터를 어떻게 주고받는지 정의하는 역할을 합니다. 
+
+이번 포스트에서는 GraphQL 스키마의 구조를 살펴보고, Node.js와 React를 사용해 간단한 GraphQL 서버와 클라이언트를 구축해보겠습니다.
+
+## 2. GraphQL 스키마란?
+스키마는 GraphQL에서 요청 가능한 데이터의 형태와 구조를 정의한 일종의 청사진입니다. 이 스키마를 기반으로 클라이언트는 서버에 어떤 데이터를 요청할 수 있는지 알 수 있습니다. 스키마는 크게 세 가지 구성 요소로 나눌 수 있습니다:
+- 타입 정의 (Type Definition): 서버가 제공하는 데이터의 타입을 정의합니다. GraphQL에는 기본 타입인 String, Int, Float, Boolean, ID 등이 있으며, 커스텀 타입을 정의할 수도 있습니다.
+- 쿼리 (Query): 클라이언트가 서버에 데이터를 요청하는 방법을 정의합니다. 쿼리는 서버에서 데이터를 가져오는 역할을 합니다.
+- 변경 (Mutation): 데이터를 추가, 수정, 삭제할 때 사용하는 요청 방식입니다.
+
+예시: GraphQL 스키마
+```
+type User {
+  id: ID!
+  name: String!
+  age: Int
+}
+
+type Query {
+  getUser(id: ID!): User
+}
+
+type Mutation {
+  createUser(name: String!, age: Int): User
+}
+```
+위의 예시는 User라는 타입을 정의하고, 클라이언트가 getUser라는 쿼리를 통해 특정 사용자의 정보를 요청할 수 있음을 나타냅니다. 또한, createUser라는 변이를 통해 사용자를 생성할 수 있습니다.
+
+## 3. Node.js로 GraphQL 서버 만들기
+이제 Node.js와 Express를 사용해 간단한 GraphQL 서버를 만들어보겠습니다. 서버에서는 사용자 정보를 요청하거나 새로 생성하는 기능을 구현할 것입니다.
+
+### 3.1 프로젝트 설정
+
+먼저 프로젝트를 설정하고 필요한 패키지를 설치합니다.
+```
+mkdir graphql-node-server
+cd graphql-node-server
+npm init -y
+npm install express express-graphql graphql
+```
+### 3.2 서버 코드 작성
+
+다음으로, 간단한 GraphQL 서버를 설정해보겠습니다. server.js 파일을 생성하고 아래 코드를 추가합니다:
+```
+const express = require('express');
+const { graphqlHTTP } = require('express-graphql');
+const { buildSchema } = require('graphql');
+
+// 스키마 정의
+const schema = buildSchema(`
+  type User {
+    id: ID!
+    name: String!
+    age: Int
+  }
+
+  type Query {
+    getUser(id: ID!): User
+  }
+
+  type Mutation {
+    createUser(name: String!, age: Int): User
+  }
+`);
+
+// 더미 데이터
+const users = [];
+
+// 리졸버 정의
+const root = {
+  getUser: ({ id }) => users.find(user => user.id === id),
+  createUser: ({ name, age }) => {
+    const user = { id: users.length + 1, name, age };
+    users.push(user);
+    return user;
+  }
+};
+
+// 서버 설정
+const app = express();
+app.use('/graphql', graphqlHTTP({
+  schema: schema,
+  rootValue: root,
+  graphiql: true, // GraphiQL 사용
+}));
+
+app.listen(4000, () => console.log('GraphQL 서버가 http://localhost:4000/graphql 에서 실행 중입니다.'));
+```
+### 3.3 GraphQL 요청 테스트
+
+이제 서버를 실행하고 GraphiQL을 사용해 쿼리와 변이를 테스트할 수 있습니다.
+```
+node server.js
+```
+- 사용자 생성 변이 (Mutation):
+```
+mutation {
+  createUser(name: "John Doe", age: 30) {
+    id
+    name
+    age
+  }
+}
+```
+- 사용자 정보 조회 쿼리 (Query):
+```
+query {
+  getUser(id: "1") {
+    id
+    name
+    age
+  }
+}
+```
+이 코드를 통해 사용자를 생성하고 해당 사용자의 정보를 조회할 수 있습니다.
+## 4. React로 GraphQL 클라이언트 구현하기
+이제 React를 사용해 GraphQL 서버와 통신하는 간단한 클라이언트를 만들어보겠습니다. 우리는 Apollo Client를 사용하여 GraphQL 서버에 요청을 보낼 것입니다.
+### 4.1 프로젝트 설정
+React 프로젝트를 생성하고 필요한 패키지를 설치합니다.
+```
+npx create-react-app graphql-client
+cd graphql-client
+npm install @apollo/client graphql
+```
+### 4.2 Apollo Client 설정
+App.js 파일을 열고 아래 코드를 추가합니다:
+```
+import React, { useState } from 'react';
+import { ApolloClient, InMemoryCache, ApolloProvider, useQuery, useMutation, gql } from '@apollo/client';
+
+// GraphQL 쿼리 및 변이
+const GET_USER = gql`
+  query GetUser($id: ID!) {
+    getUser(id: $id) {
+      id
+      name
+      age
+    }
+  }
+`;
+
+const CREATE_USER = gql`
+  mutation CreateUser($name: String!, $age: Int) {
+    createUser(name: $name, age: $age) {
+      id
+      name
+      age
+    }
+  }
+`;
+
+// Apollo Client 설정
+const client = new ApolloClient({
+  uri: 'http://localhost:4000/graphql',
+  cache: new InMemoryCache(),
+});
+
+function App() {
+  const [userId, setUserId] = useState('');
+  const [name, setName] = useState('');
+  const [age, setAge] = useState('');
+
+  const { data, loading, error } = useQuery(GET_USER, {
+    variables: { id: userId },
+    skip: !userId,
+  });
+
+  const [createUser] = useMutation(CREATE_USER);
+
+  const handleCreateUser = async () => {
+    await createUser({ variables: { name, age: parseInt(age) } });
+  };
+
+  return (
+    <ApolloProvider client={client}>
+      <div>
+        <h1>GraphQL 클라이언트</h1>
+        <div>
+          <h2>사용자 조회</h2>
+          <input 
+            type="text" 
+            placeholder="User ID" 
+            value={userId} 
+            onChange={(e) => setUserId(e.target.value)} 
+          />
+          <button>사용자 조회</button>
+          {loading && <p>로딩 중...</p>}
+          {error && <p>에러 발생: {error.message}</p>}
+          {data && (
+            <div>
+              <p>ID: {data.getUser.id}</p>
+              <p>이름: {data.getUser.name}</p>
+              <p>나이: {data.getUser.age}</p>
+            </div>
+          )}
+        </div>
+
+        <div>
+          <h2>사용자 생성</h2>
+          <input 
+            type="text" 
+            placeholder="이름" 
+            value={name} 
+            onChange={(e) => setName(e.target.value)} 
+          />
+          <input 
+            type="text" 
+            placeholder="나이" 
+            value={age} 
+            onChange={(e) => setAge(e.target.value)} 
+          />
+          <button onClick={handleCreateUser}>사용자 생성</button>
+        </div>
+      </div>
+    </ApolloProvider>
+  );
+}
+
+export default App;
+```
+### 4.3 클라이언트 실행
+이제 클라이언트를 실행하고 서버와 상호작용할 수 있습니다.
+```
+npm start
+```
+이제 React 클라이언트에서 GraphQL 서버와 통신해 사용자를 조회하거나 새로 생성할 수 있습니다.
+## 5. 결론
+이번 포스트에서는 Node.js와 React를 사용해 GraphQL 서버와 클라이언트를 간단하게 구축하는 방법을 살펴보았습니다. 
+
+GraphQL의 스키마와 쿼리, 변이의 개념을 이해하고, 이를 실습해보았는데요, 이를 통해 GraphQL의 유연하고 효율적인 데이터 요청 방식을 경험할 수 있었을 것입니다.
+
+다음 포스트에서는 GraphQL의 리졸버와 실제 비즈니스 로직을 처리하는 방법에 대해 깊이 있게 다뤄보겠습니다. 기대해 주세요!

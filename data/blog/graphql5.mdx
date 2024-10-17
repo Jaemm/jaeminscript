@@ -1,0 +1,183 @@
+---
+title: 'GraphQL 시리즈 5_GraphQL 에러 처리 및 성능 최적화'
+date: '2024-10-17'
+lastmod: '2024-10-10'
+tags: ['graphql']
+draft: false
+summary: 'graphql'
+images: ['/static/images/']
+---
+
+![graphql](/static/images/graphql/graphqllogo.png)
+
+## 목차
+  <TOCInline toc={props.toc} exclude="Introduction" />
+
+## 1. 서론
+GraphQL 서버는 클라이언트의 다양한 요청을 처리하는 역할을 합니다. 하지만 잘못된 쿼리, 서버 내부 오류, 네트워크 문제 등으로 인해 에러가 발생할 수 있습니다. 에러가 발생했을 때, 적절한 메시지를 반환하고, 클라이언트가 이에 대해 어떻게 대응할지 명확히 전달하는 것이 중요합니다. 또한 성능을 개선하기 위한 캐싱, 페이징, 최적화 전략도 필수적입니다.
+
+## 2. 인증(Authentication)과 권한 관리(Authorization)의 차이
+GraphQL에서는 에러가 발생하면 기본적으로 errors 필드에 에러 정보가 포함된 응답을 반환합니다. 하지만 더 세부적인 에러 처리와 사용자에게 적절한 피드백을 제공하기 위해서는 커스텀 에러 처리 로직이 필요할 때가 많습니다.
+
+### 2.1 기본적인 에러 처리
+GraphQL의 리졸버에서 에러가 발생하면 GraphQL은 자동으로 에러 메시지를 반환합니다. 예를 들어, 다음과 같이 잘못된 ID를 요청할 때 에러를 처리할 수 있습니다.
+```
+const resolvers = {
+  Query: {
+    getUser: (parent, { id }) => {
+      const user = users.find(u => u.id === id);
+      if (!user) {
+        throw new Error('해당 ID에 해당하는 사용자를 찾을 수 없습니다.');
+      }
+      return user;
+    }
+  }
+};
+```
+ 코드에서 getUser 쿼리를 요청할 때 존재하지 않는 id를 전달하면 해당 ID에 해당하는 사용자를 찾을 수 없습니다.라는 에러 메시지가 클라이언트에 전달됩니다.
+
+### 2.2 에러 유형에 따른 구분 처리
+때로는 다양한 유형의 에러를 처리해야 합니다. 예를 들어, 인증 관련 에러와 데이터베이스 관련 에러를 다르게 처리하고 싶은 경우입니다. 이를 위해 GraphQL에서 에러를 세분화하여 처리할 수 있습니다.
+```
+class AuthenticationError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'AuthenticationError';
+  }
+}
+
+class DatabaseError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'DatabaseError';
+  }
+}
+
+const resolvers = {
+  Query: {
+    getSecretData: (parent, args, context) => {
+      if (!context.user) {
+        throw new AuthenticationError('인증이 필요합니다.');
+      }
+      
+      try {
+        // 데이터베이스 요청 로직
+        // 만약 실패하면
+        throw new DatabaseError('데이터베이스 요청 실패');
+      } catch (error) {
+        throw error;
+      }
+    }
+  }
+};
+```
+에러를 세분화하여 처리하면 클라이언트는 에러의 원인을 정확하게 파악하고, 대응할 수 있습니다.
+
+### 2.3 Apollo Server에서 에러 포맷팅
+Apollo Server는 에러 메시지를 포맷팅하거나 확장하는 기능을 제공합니다. 이를 통해 개발자가 원하는 대로 에러 메시지를 정의하고 관리할 수 있습니다.
+```
+const { ApolloServer, gql } = require('apollo-server');
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  formatError: (err) => {
+    if (err.originalError instanceof AuthenticationError) {
+      return new Error('인증에 실패했습니다.');
+    }
+    return err;
+  }
+});
+```
+위 코드에서 formatError를 사용해 인증 에러가 발생했을 때, 클라이언트에 인증에 실패했습니다.라는 사용자 친화적인 메시지를 전달할 수 있습니다.
+
+## 3. JWT를 이용한 인증 구현
+GraphQL은 한 번의 요청으로 많은 데이터를 받아올 수 있는 유연성을 제공하지만, 잘못된 쿼리 작성이나 서버 설정으로 인해 성능이 저하될 수 있습니다. 성능을 최적화하기 위한 몇 가지 전략을 소개합니다.
+
+### 3.1 N+1 문제 해결하기
+GraphQL의 대표적인 성능 문제 중 하나는 N+1 문제입니다. 예를 들어, 한 쿼리에서 여러 사용자와 관련된 데이터를 요청할 때, 각각의 사용자에 대해 별도의 데이터베이스 요청이 발생하는 경우입니다.
+
+이 문제를 해결하기 위해 DataLoader 라이브러리를 사용할 수 있습니다. DataLoader는 동일한 쿼리를 하나로 묶어 데이터베이스 요청 수를 줄여줍니다.
+```
+npm install dataloader
+```
+```
+const DataLoader = require('dataloader');
+
+// 사용자 데이터를 한번에 가져오는 함수
+const batchUsers = async (ids) => {
+  return User.find({ _id: { $in: ids } });
+};
+
+// DataLoader 인스턴스 생성
+const userLoader = new DataLoader(keys => batchUsers(keys));
+
+const resolvers = {
+  Query: {
+    getUser: (parent, { id }) => {
+      return userLoader.load(id);
+    }
+  }
+};
+```
+위 코드에서 DataLoader는 여러 id에 대한 요청을 하나로 묶어 데이터베이스로 보내므로, 여러 요청을 효율적으로 처리할 수 있습니다.
+### 3.2 캐싱
+GraphQL에서 자주 호출되는 데이터를 효율적으로 관리하려면 캐싱을 활용할 수 있습니다. 특히 불변 데이터나 자주 변경되지 않는 데이터를 캐시하면 성능을 크게 향상시킬 수 있습니다. Apollo Client와 Server에서 제공하는 캐싱 메커니즘을 활용하거나 Redis 같은 외부 캐시 솔루션을 사용할 수 있습니다.
+
+#### 3.2.1 Apollo Client의 캐싱 전략
+Apollo Client는 InMemoryCache를 통해 클라이언트 쪽에서 데이터를 캐싱합니다. GraphQL 쿼리가 이미 캐시된 데이터일 경우 서버로 요청을 보내지 않고 캐시된 데이터를 사용합니다.
+```
+const client = new ApolloClient({
+  uri: 'http://localhost:4000/graphql',
+  cache: new InMemoryCache(),
+});
+```
+#### 3.2.2 서버 캐싱
+서버에서 캐싱을 적용하려면 HTTP 캐싱 헤더를 설정하거나 Redis와 같은 인메모리 캐시 솔루션을 사용할 수 있습니다. Apollo Server의 cacheControl 기능을 사용하여 캐시 정책을 설정할 수도 있습니다.
+```
+const { ApolloServer, gql } = require('apollo-server');
+
+const server = new ApolloServer({
+  typeDefs,
+  resolvers,
+  cacheControl: {
+    defaultMaxAge: 5, // 5초 동안 캐싱
+  }
+});
+```
+### 3.3 페이징 처리
+클라이언트가 대량의 데이터를 한 번에 요청하면 서버 성능에 큰 부담이 될 수 있습니다. 이를 방지하기 위해 페이징을 구현하여 요청된 데이터의 양을 제한할 수 있습니다. GraphQL에서는 커서 기반 또는 오프셋 기반 페이징을 사용할 수 있습니다.
+
+#### 3.3.1 커서 기반 페이징
+```
+type Query {
+  users(first: Int, after: String): UserConnection
+}
+
+type UserConnection {
+  edges: [UserEdge]
+  pageInfo: PageInfo
+}
+
+type UserEdge {
+  node: User
+  cursor: String
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean
+}
+```
+#### 3.3.2 오프셋 기반 페이징
+```
+type Query {
+  users(limit: Int, offset: Int): [User]
+}
+```
+페이징을 적용하면 클라이언트는 대량의 데이터를 한 번에 요청하지 않고, 필요한 양만큼씩 가져와서 서버 성능을 보호할 수 있습니다.
+
+## 4. 결론
+GraphQL에서 에러 처리와 성능 최적화는 실무에서 매우 중요한 과제입니다. 에러가 발생했을 때 사용자에게 명확한 메시지를 제공하고, 성능 이슈를 방지하기 위해 DataLoader, 캐싱, 페이징 등의 최적화 전략을 적용하면 효율적이고 안정적인 서비스를 구축할 수 있습니다.
+
+이로써 GraphQL 시리즈의 마지막 포스트가 마무리되었습니다. 이제 GraphQL을 도입하고 활용할 수 있는 다양한 방법에 대해 깊이 이해하셨기를 바랍니다. 앞으로 실무에서 직접 사용해보고 개선해 나가길 바랍니다.
