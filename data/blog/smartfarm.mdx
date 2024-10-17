@@ -1,75 +1,76 @@
 ---
-title: '스마트팜 관제 플랫폼'
-date: '2024-10-10'
-lastmod: '2024-10-10'
-tags: ['projects']
+title: 'Electron 시리즈 1: Electron의 개념과 구조 이해하기'
+date: '2024-10-17'
+lastmod: '2024-10-17'
+tags: ['graphql']
 draft: false
-summary: 'React, Node, AWS'
+summary: 'electron'
 images: ['/static/images/']
 ---
 
 ![projects-smartfarm](/static/images/project/smartfarm.png)
-## 목차
-    <TOCInline toc={props.toc} exclude="Introduction" />
 
+## 목차
+  <TOCInline toc={props.toc} exclude="Introduction" />
+  
 ## 프로젝트 개요
-    - 프로젝트명: 스마트팜 관제 플랫폼
-    - 기간: 2022.11 ~ 2023.11
-    - 요약: 스마트팜 환경을 실시간으로 모니터링하고, 자동화된 제어 시스템을 통해 작
-    물의 최적 성장 환경을 관리하는 시스템 구축
-    - 역할: 시스템 설계, 프론트엔드/백엔드 개발, 실시간 데이터 처리 및 통계 분석
+- 프로젝트명: 스마트팜 관제 플랫폼
+- 기간: 2022.11 ~ 2023.11
+- 요약: 스마트팜 환경을 실시간으로 모니터링하고, 자동화된 제어 시스템을 통해 작
+물의 최적 성장 환경을 관리하는 시스템 구축
+- 역할: 시스템 설계, 프론트엔드/백엔드 개발, 실시간 데이터 처리 및 통계 분석
 
 ## 기술 스택
-    - 프론트엔드: React.js, Next.js
-    - 상태 관리: Recoil, Redux
-    - 백엔드: Node.js, Express.js
-    - 데이터베이스: MySQL, Sequelize, AWS DynamoDB
-    - 인증 및 보안: Passport, JSON Web Token (JWT)
-    - 실시간 통신: Socket.IO, WebSocket (ws), MQTT
-    - 공통 도구 및 라이브러리: Axios, Node-fetch, Moment.js
-    - 환경 설정: Dotenv, Cross-env
-    - 빌드 도구: PM2, Concurrently, Nodemon
+- 프론트엔드: React.js, Next.js
+- 상태 관리: Recoil, Redux
+- 백엔드: Node.js, Express.js
+- 데이터베이스: MySQL, Sequelize, AWS DynamoDB
+- 인증 및 보안: Passport, JSON Web Token (JWT)
+- 실시간 통신: Socket.IO, WebSocket (ws), MQTT
+- 공통 도구 및 라이브러리: Axios, Node-fetch, Moment.js
+- 환경 설정: Dotenv, Cross-env
+- 빌드 도구: PM2, Concurrently, Nodemon
 
 ## 플로우 차트
-    ![projects-bms](/static/images/project/smartfarmflow.png)
+![projects-bms](/static/images/project/smartfarmflow.png)
 
 ## 주요성과
-    - 시스템 설계 및 아키텍처 구축
+- 시스템 설계 및 아키텍처 구축
 
-        프론트엔드는 React.js와 Next.js로, 백엔드는 Node.js와 Express.js로 구축하여 실시간 작물 상태 데이터를 수집하고 통신
-        하는 시스템 설계 AWS DynamoDB와 MySQL을 결합한 하이브리드 데이터베이스 구조로 실시간 및 과거 데이터 관리
+프론트엔드는 React.js와 Next.js로, 백엔드는 Node.js와 Express.js로 구축하여 실시간 작물 상태 데이터를 수집하고 통신
+하는 시스템 설계 AWS DynamoDB와 MySQL을 결합한 하이브리드 데이터베이스 구조로 실시간 및 과거 데이터 관리
 
-    - 프론트엔드 개발
+- 프론트엔드 개발
 
-        온도, 습도, 수분 상태 등 주요 환경 정보를 실시간으로 시각화하는 대시보드 구현 사용자가 환경 조건을 설정하면 
-        자동으로 온실의 환기, 급수, 조명 시스템을 제어할 수 있는 기능 제공
+온도, 습도, 수분 상태 등 주요 환경 정보를 실시간으로 시각화하는 대시보드 구현 사용자가 환경 조건을 설정하면 
+자동으로 온실의 환기, 급수, 조명 시스템을 제어할 수 있는 기능 제공
 
-    - 백엔드 및 데이터 관리
+- 백엔드 및 데이터 관리
 
-        Node.js와 Express.js 기반의 API 설계로 센서 데이터를 처리하고 실시간으로 상태 업데이트
-        AWS Lambda를 통해 자동화된 작업 처리, EC2 이벤트와 연계하여 농업 장비 제어
+Node.js와 Express.js 기반의 API 설계로 센서 데이터를 처리하고 실시간으로 상태 업데이트
+AWS Lambda를 통해 자동화된 작업 처리, EC2 이벤트와 연계하여 농업 장비 제어
 
-    - 실시간 데이터 통신
+- 실시간 데이터 통신
 
-        WebSocket을 활용해 실시간 작물 상태를 대시보드에 반영하고, 관리자들이 즉각적인 대응을 할 수 있도록 구현 
-        자동화 제어 시스템을 통해 임계치 도달 시 환경을 자동 조정 (예: 온도가 높으면 환기 시스템 작동)
+WebSocket을 활용해 실시간 작물 상태를 대시보드에 반영하고, 관리자들이 즉각적인 대응을 할 수 있도록 구현 
+자동화 제어 시스템을 통해 임계치 도달 시 환경을 자동 조정 (예: 온도가 높으면 환기 시스템 작동)
 
-    - 통계 및 분석 기능
+- 통계 및 분석 기능
 
-        작물 성장 데이터를 수집, 환경 변화와 농업 효율성을 분석하는 통계 대시보드 구현
-        과거 데이터를 기반으로 최적의 작물 성장 환경을 추천하는 예측 분석 기능 추가
+작물 성장 데이터를 수집, 환경 변화와 농업 효율성을 분석하는 통계 대시보드 구현
+과거 데이터를 기반으로 최적의 작물 성장 환경을 추천하는 예측 분석 기능 추가
 
-    - 배포 및 유지 관리
+- 배포 및 유지 관리
 
-        AWS EC2와 S3를 사용해 시스템 배포, 서버 성능 및 안정성 유지
-        시스템 모니터링 및 유지 관리로 안정적인 서비스 제공
+AWS EC2와 S3를 사용해 시스템 배포, 서버 성능 및 안정성 유지
+시스템 모니터링 및 유지 관리로 안정적인 서비스 제공
 
 ## 서비스 스크린샷
-    ![projects-bms](/static/images/project/smartfarm.png)
-    ![projects-bms](/static/images/project/smartfarm1.png)
-    ![projects-bms](/static/images/project/smartfarm2.png)
-    ![projects-bms](/static/images/project/smartfarm3.png)
-    ![projects-bms](/static/images/project/smartfarm4.png)
-    ![projects-bms](/static/images/project/smartfarm5.png)
-    ![projects-bms](/static/images/project/smartfarm6.png)
-    ![projects-bms](/static/images/project/smartfarm7.png)
+![projects-bms](/static/images/project/smartfarm.png)
+![projects-bms](/static/images/project/smartfarm1.png)
+![projects-bms](/static/images/project/smartfarm2.png)
+![projects-bms](/static/images/project/smartfarm3.png)
+![projects-bms](/static/images/project/smartfarm4.png)
+![projects-bms](/static/images/project/smartfarm5.png)
+![projects-bms](/static/images/project/smartfarm6.png)
+![projects-bms](/static/images/project/smartfarm7.png)

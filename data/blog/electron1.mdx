@@ -1,0 +1,164 @@
+---
+title: 'Electron 시리즈 1: Electron의 개념과 구조 이해하기'
+date: '2024-10-17'
+lastmod: '2024-10-17'
+tags: ['graphql']
+draft: false
+summary: 'electron'
+images: ['/static/images/']
+---
+
+![electron](/static/images/electron/electronlogo.png)
+
+## 목차
+  <TOCInline toc={props.toc} exclude="Introduction" />
+  
+## 1. 서론
+Electron은 **웹 기술(HTML, CSS, JavaScript)**을 이용해 데스크탑 애플리케이션을 만들 수 있는 프레임워크입니다. 한 번의 개발로 Windows, macOS, Linux에서 모두 실행 가능한 애플리케이션을 만들 수 있어, 개발 비용을 절감하면서 크로스 플랫폼 지원이 가능합니다.
+
+이번 포스트에서는 Electron의 기본 개념과 애플리케이션이 어떻게 구성되는지 설명하겠습니다.
+
+## 2. Electron이란?
+Electron은 GitHub에서 개발한 오픈 소스 프레임워크로, 크로스 플랫폼 데스크탑 애플리케이션 개발을 용이하게 해줍니다. Electron의 핵심은 웹 기술을 사용해 데스크탑 앱을 구축할 수 있다는 점입니다. 이를 통해 개발자들은 웹 개발에 사용되는 기술을 그대로 데스크탑 애플리케이션에 활용할 수 있습니다.
+
+Electron은 내부적으로 Chromium(웹 브라우저 엔진)과 Node.js를 사용합니다. 이를 통해 웹 애플리케이션처럼 보이지만, 시스템 자원에 접근하고 네이티브 API를 사용할 수 있는 애플리케이션을 만들 수 있습니다.
+
+## 3. Electron의 구조
+Electron 애플리케이션은 Main 프로세스와 Renderer 프로세스로 구성됩니다. 각 프로세스는 독립적으로 동작하며, 서로 메시지를 주고받는 방식으로 통신합니다.
+
+### 3.1 Main 프로세스
+Main 프로세스는 Electron 애플리케이션의 백그라운드에서 실행됩니다. 주로 앱의 라이프사이클(생성, 종료 등)을 관리하고, 네이티브 기능(파일 시스템 접근, 네이티브 메뉴 등)을 제어합니다. Main 프로세스에서 앱 창을 생성하고, Renderer 프로세스와의 통신을 처리하는 역할을 합니다.
+```
+// main.js
+const { app, BrowserWindow } = require('electron');
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
+
+  win.loadFile('index.html');
+}
+
+app.whenReady().then(() => {
+  createWindow();
+});
+```
+위 예제에서 app 모듈은 애플리케이션 라이프사이클을 관리하고, BrowserWindow 모듈은 새 창을 생성하는 역할을 합니다. Main 프로세스는 Node.js의 모든 API에 접근할 수 있습니다.
+
+### 3.2 Renderer 프로세스
+Renderer 프로세스는 애플리케이션의 UI를 담당하는 부분입니다. HTML, CSS, JavaScript를 사용해 앱의 인터페이스를 렌더링하며, Main 프로세스와는 별도로 독립된 프로세스로 동작합니다. 각 창마다 하나의 Renderer 프로세스가 할당됩니다.
+```
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electron App</title>
+</head>
+<body>
+  <h1>Hello, Electron!</h1>
+</body>
+</html>
+```
+Renderer 프로세스에서는 웹 기술을 사용해 UI를 구축할 수 있으며, 필요한 경우 Main 프로세스와의 통신을 통해 백엔드 작업을 처리할 수 있습니다.
+
+## 4. Electron의 주요 모듈
+Electron에서 자주 사용되는 몇 가지 주요 모듈을 소개합니다.
+
+### 4.1 app
+app 모듈은 Electron 애플리케이션의 라이프사이클을 관리합니다. 애플리케이션의 시작, 종료 등 주요 이벤트를 처리할 수 있습니다.
+```
+app.on('ready', () => {
+  console.log('애플리케이션이 준비되었습니다.');
+});
+```
+### 4.2 BrowserWindow
+BrowserWindow 모듈은 애플리케이션 창을 생성하고 관리합니다. 각 창은 별도의 Renderer 프로세스를 실행하며, 웹 페이지를 로드할 수 있습니다.
+```
+const win = new BrowserWindow({
+  width: 800,
+  height: 600
+});
+
+win.loadURL('https://example.com');
+```
+### 4.3 ipcMain & ipcRenderer
+ipcMain과 ipcRenderer는 Main 프로세스와 Renderer 프로세스 간의 통신을 담당하는 모듈입니다. ipcMain은 Main 프로세스에서, ipcRenderer는 Renderer 프로세스에서 사용됩니다.
+```
+// main.js
+const { ipcMain } = require('electron');
+ipcMain.on('async-message', (event, arg) => {
+  console.log(arg); // 'Hello from Renderer'
+  event.reply('async-reply', 'Message received');
+});
+
+// renderer.js
+const { ipcRenderer } = require('electron');
+ipcRenderer.send('async-message', 'Hello from Renderer');
+ipcRenderer.on('async-reply', (event, arg) => {
+  console.log(arg); // 'Message received'
+});
+```
+## 5. Electron 설치 및 간단한 앱 생성
+Electron을 설치하고, 간단한 애플리케이션을 만들어 보겠습니다.
+- 1. Node.js가 설치되어 있어야 합니다. 설치되지 않았다면 Node.js 공식 사이트에서 설치할 수 있습니다.
+- 2. 프로젝트 폴더를 생성하고, npm init -y 명령어로 패키지 설정을 초기화합니다.
+- 3. Electron을 설치합니다.
+```
+npm install electron --save-dev
+```
+- 4. 다음과 같이 main.js 파일을 생성하고, 위에 설명한 기본 코드 구조를 작성합니다.
+```
+const { app, BrowserWindow } = require('electron');
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
+
+  win.loadFile('index.html');
+}
+
+app.whenReady().then(() => {
+  createWindow();
+});
+```
+- 5. index.html 파일을 생성하여 간단한 UI를 추가합니다.
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electron App</title>
+</head>
+<body>
+  <h1>Welcome to Electron!</h1>
+</body>
+</html>
+```
+- 6. package.json 파일에서 Electron을 실행할 명령어를 추가합니다.
+```
+{
+  "scripts": {
+    "start": "electron ."
+  }
+}
+```
+- 7. 앱을 실행합니다.
+```
+npm start
+```
+npm start 명령어를 실행하면 Electron 애플리케이션 창이 열리고, index.html 파일의 내용이 표시됩니다.
+## 6. 결론
+이번 포스트에서는 Electron의 기본 개념과 구조를 알아보았습니다. Electron을 사용하면 웹 기술을 활용해 크로스 플랫폼 데스크탑 애플리케이션을 개발할 수 있습니다. 다음 포스트에서는 Electron에서의 UI 구성과 Main 프로세스와 Renderer 프로세스 간의 통신에 대해 더 깊이 알아보겠습니다.
