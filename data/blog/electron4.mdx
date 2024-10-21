@@ -1,0 +1,146 @@
+---
+title: 'Electron 시리즈 4: Electron 애플리케이션 배포하기'
+date: '2024-10-20'
+lastmod: '2024-10-18'
+tags: ['electron']
+draft: false
+summary: 'electron'
+images: ['/static/images/']
+---
+
+![electron](/static/images/electron/electronlogo.png)
+
+## 목차
+  <TOCInline toc={props.toc} exclude="Introduction" />
+  
+## 1. 서론
+지난 3탄에서는 Electron에서 제공하는 네이티브 API를 활용하여 시스템 기능에 접근하는 방법을 다루었습니다. 이번 4탄에서는 Electron 애플리케이션을 사용자에게 배포하는 방법을 알아보겠습니다. 배포는 Electron 프로젝트의 최종 단계로, 이 과정에서 애플리케이션을 패키징하고 운영체제에 맞게 빌드해야 합니다.
+
+## 2. 배포의 중요성
+Electron 애플리케이션은 기본적으로 크로스 플랫폼을 지원하므로, Windows, macOS, Linux와 같은 다양한 운영체제에서 실행될 수 있습니다. 이를 위해서는 각 운영체제에 맞는 패키지로 애플리케이션을 빌드하고 배포해야 합니다. Electron은 여러 운영체제에 적합한 배포 도구와 프로세스를 제공합니다.
+
+## 3. Electron 애플리케이션 빌드 및 배포 도구
+Electron 애플리케이션을 배포할 때 일반적으로 electron-builder 또는 electron-forge 같은 툴을 사용합니다. 이 도구들은 빌드 프로세스를 간소화하고, 다양한 운영체제에 맞는 설치 파일을 쉽게 생성할 수 있게 도와줍니다.
+
+### 3.1 electron-builder
+electron-builder는 Electron 애플리케이션의 패키징과 배포를 위한 가장 인기 있는 도구 중 하나입니다. 간단한 설정으로 다양한 운영체제에 맞는 패키지를 생성할 수 있으며, 설치 프로그램 생성도 지원합니다.
+
+### 3.2 electron-forge
+electron-forge는 Electron 애플리케이션의 개발부터 배포까지의 과정을 단순화해 주는 도구입니다. Webpack이나 TypeScript 같은 기술과의 통합을 지원하며, 여러 플러그인을 통해 확장 가능합니다. 설정이 간편하고, 다양한 플랫폼에 맞춘 빌드 및 패키징을 쉽게 수행할 수 있습니다.
+
+## 4. electron-builder를 사용한 배포
+이번 섹션에서는 electron-builder를 사용하여 애플리케이션을 빌드하고 배포하는 과정을 단계별로 설명합니다.
+
+### 4.1 프로젝트 설정
+
+1. 먼저 electron-builder를 설치합니다.
+```
+npm install electron-builder --save-dev
+```
+
+2. package.json 파일에 빌드 설정을 추가합니다.
+```
+{
+  "name": "my-electron-app",
+  "version": "1.0.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.example.myapp",
+    "productName": "MyElectronApp",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "renderer.js",
+      "index.html",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "mac": {
+      "target": "dmg"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  },
+  "devDependencies": {
+    "electron": "^24.0.0",
+    "electron-builder": "^24.0.0"
+  }
+}
+```
+- appId: 애플리케이션의 고유 식별자입니다.
+- productName: 사용자에게 표시될 애플리케이션 이름입니다.
+- directories.output: 빌드 결과물이 저장될 디렉터리입니다.
+- files: 애플리케이션 빌드에 포함될 파일 목록입니다.
+- win, mac, linux: 각각의 운영체제에 맞는 빌드 옵션입니다. 여기서는 Windows는 nsis 형식으로, macOS는 dmg, Linux는 AppImage로 빌드하도록 설정했습니다.
+
+### 4.2 빌드 및 패키징
+설정이 완료되면 다음 명령어로 빌드를 실행할 수 있습니다.
+```
+npm run build
+```
+이 명령어는 dist 디렉터리에 운영체제별 설치 파일을 생성합니다.
+
+### 4.3 배포 방식
+애플리케이션을 빌드한 후에는 다음과 같은 배포 방식으로 사용자에게 전달할 수 있습니다.
+
+- GitHub Releases: GitHub 저장소의 릴리스 기능을 사용하여 설치 파일을 배포합니다.
+- S3/Azure Blob Storage: 클라우드 스토리지를 활용하여 설치 파일을 배포할 수 있습니다.
+- 자체 웹사이트: 공식 웹사이트를 통해 배포하는 방법도 있습니다.
+
+### 4.4 자동 업데이트
+Electron 애플리케이션의 배포 이후 중요한 기능 중 하나는 자동 업데이트입니다. electron-builder는 자동 업데이트 기능을 지원하며, 이를 통해 사용자가 새로운 버전을 손쉽게 받을 수 있도록 할 수 있습니다.
+
+자동 업데이트 설정
+
+main.js 파일에 자동 업데이트 기능을 추가합니다
+```
+const { app, BrowserWindow, autoUpdater } = require('electron');
+const path = require('path');
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
+
+  win.loadFile('index.html');
+}
+
+app.whenReady().then(() => {
+  createWindow();
+  autoUpdater.checkForUpdatesAndNotify();
+});
+```
+- **autoUpdater.checkForUpdatesAndNotify()**를 호출하여 애플리케이션이 자동으로 업데이트를 확인하고, 새로운 버전이 있을 경우 사용자에게 알립니다.
+
+## 5. 프로젝트에서 배포 시 고려할 사항
+### 5.1 코드 서명
+운영체제에 따라 애플리케이션을 배포할 때 **코드 서명(Codesigning)**이 필요할 수 있습니다. 특히, macOS나 Windows의 경우 코드 서명이 되어 있지 않으면 애플리케이션이 설치되지 않거나 보안 경고가 나타날 수 있습니다.
+- Windows: EV 인증서 또는 Standard 인증서를 통해 코드 서명.
+- macOS: Apple의 Developer ID 인증서를 사용하여 서명.
+
+### 5.2 크로스 플랫폼 지원
+Electron은 크로스 플랫폼을 지원하지만, 운영체제별로 약간의 차이가 있을 수 있습니다. 이를 고려하여 빌드 환경을 테스트하고, 각 플랫폼에 맞는 최적화 작업이 필요할 수 있습니다.
+
+- Windows, macOS, Linux 환경에서 각각의 배포 파일이 잘 작동하는지 확인해야 합니다.
+- 플랫폼별로 특정 기능이 정상적으로 동작하는지 테스트합니다.
+
+### 5.3 업데이트 관리
+Electron 애플리케이션을 배포한 후에는 꾸준히 업데이트를 관리해야 합니다. 이를 위해 자동 업데이트 기능을 구현하고, GitHub 릴리스나 S3와 같은 호스팅 서비스를 통해 버전을 관리하는 것이 중요합니다.
+
+## 6. 결론
+이번 4탄에서는 Electron 애플리케이션을 빌드하고 배포하는 과정에 대해 알아보았습니다. electron-builder를 사용하여 간단하게 배포 파일을 생성하고, 다양한 플랫폼에 맞춘 패키지를 생성할 수 있음을 확인했습니다. 또한 자동 업데이트 기능을 통해 사용자들이 항상 최신 버전을 사용할 수 있도록 설정하는 방법도 배웠습니다.
+
+다음 5탄에서는 Electron 애플리케이션의 성능 최적화와 최신 기능들을 다루겠습니다!

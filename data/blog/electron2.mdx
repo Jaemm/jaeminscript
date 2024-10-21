@@ -1,0 +1,169 @@
+---
+title: 'Electron 시리즈 2: Main과 Renderer 프로세스 간 통신'
+date: '2024-10-18'
+lastmod: '2024-10-18'
+tags: ['electron']
+draft: false
+summary: 'electron'
+images: ['/static/images/']
+---
+
+![electron](/static/images/electron/electronlogo.png)
+
+## 목차
+  <TOCInline toc={props.toc} exclude="Introduction" />
+  
+## 1. 서론
+지난 1탄에서 Electron의 기본 개념과 구조에 대해 알아보았습니다. 이번 2탄에서는 Main 프로세스와 Renderer 프로세스 간의 통신 방법에 대해 자세히 다루고, 이를 활용하여 기능을 구현하는 방법을 소개하겠습니다.
+
+Electron 애플리케이션에서 Main 프로세스는 시스템 관련 작업을 처리하고, Renderer 프로세스는 UI와 사용자 상호작용을 담당합니다. 이 두 프로세스가 어떻게 소통하고, 데이터를 주고받는지 이해하는 것이 핵심입니다.
+
+## 2. Electron이란?
+Main과 Renderer 프로세스는 독립적인 프로세스이기 때문에 직접적인 함수 호출이 불가능합니다. 대신, Electron은 **IPC (Inter-Process Communication)**를 제공하여 서로 통신할 수 있도록 합니다.
+
+### 2.1 IPC 개념
+IPC는 프로세스 간 통신을 의미하며, Electron에서는 이를 위한 두 가지 주요 모듈인 ipcMain과 ipcRenderer를 제공합니다.
+
+- ipcMain: Main 프로세스에서 사용되며, Renderer 프로세스로부터 메시지를 수신하고 응답을 보낼 수 있습니다.
+- ipcRenderer: Renderer 프로세스에서 사용되며, Main 프로세스로 메시지를 보낼 수 있고, 응답을 받을 수 있습니다.
+
+### 2.2 비동기 메시지 통신
+Electron에서 주로 사용하는 방식은 비동기 통신입니다. 비동기 방식은 프로세스 간에 메시지를 주고받을 때 응답을 기다리지 않고, 이벤트를 통해 처리할 수 있는 효율적인 방식입니다.
+
+다음 예제를 통해 비동기 방식으로 Main과 Renderer가 데이터를 주고받는 방법을 살펴보겠습니다.
+```
+// main.js (Main 프로세스)
+const { app, BrowserWindow, ipcMain } = require('electron');
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
+
+  win.loadFile('index.html');
+}
+
+app.whenReady().then(() => {
+  createWindow();
+});
+
+ipcMain.on('message-from-renderer', (event, arg) => {
+  console.log(arg); // 'Hello from Renderer'
+  event.reply('reply-from-main', 'Hello from Main');
+});
+```
+```
+// renderer.js (Renderer 프로세스)
+const { ipcRenderer } = require('electron');
+
+ipcRenderer.send('message-from-renderer', 'Hello from Renderer');
+
+ipcRenderer.on('reply-from-main', (event, arg) => {
+  console.log(arg); // 'Hello from Main'
+});
+```
+- Renderer 프로세스에서 ipcRenderer.send()를 사용하여 Main 프로세스에 메시지를 보냅니다.
+- Main 프로세스는 ipcMain.on()으로 메시지를 수신하고, event.reply()로 Renderer에 응답을 보냅니다.
+
+## 3. 동기 메시지 통신
+Electron은 동기 통신도 지원하지만, 성능과 효율성 측면에서 비동기 통신을 사용하는 것이 좋습니다. 동기 통신은 Main 프로세스가 응답할 때까지 Renderer 프로세스가 대기해야 하므로, 애플리케이션 성능에 부정적인 영향을 줄 수 있습니다.
+
+### 3.1 동기 메시지 예제
+```
+// main.js
+ipcMain.on('synchronous-message', (event, arg) => {
+  console.log(arg); // 'Sync message from Renderer'
+  event.returnValue = 'Sync response from Main';
+});
+```
+```
+// renderer.js
+const result = ipcRenderer.sendSync('synchronous-message', 'Sync message from Renderer');
+console.log(result); // 'Sync response from Main'
+```
+이 예제에서 ipcRenderer.sendSync()를 사용하여 메시지를 보낸 후 Main 프로세스의 응답을 동기적으로 기다립니다.
+
+## 4. 메시지 전송과 데이터 처리
+Main과 Renderer 간의 통신에서 가장 중요한 것은 데이터를 주고받으며 그 데이터를 처리하는 것입니다. 예를 들어, Renderer에서 사용자 입력을 받아 Main에서 이를 처리한 뒤, 결과를 다시 Renderer로 보내는 식입니다.
+
+### 4.1 예제: 사용자 입력 처리
+간단한 사용자 입력을 통해 Main 프로세스가 데이터를 처리하고, 그 결과를 Renderer에 전달하는 예제를 만들어보겠습니다.
+
+#### 4.1.1 HTML (Renderer 프로세스)
+```
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Electron App</title>
+</head>
+<body>
+  <h1>Message Sender</h1>
+  <input id="userInput" type="text" placeholder="Type a message" />
+  <button id="sendBtn">Send Message</button>
+
+  <h2>Response:</h2>
+  <p id="response"></p>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
+```
+#### 4.1.2 Renderer 프로세스 (renderer.js)
+```
+const { ipcRenderer } = require('electron');
+
+document.getElementById('sendBtn').addEventListener('click', () => {
+  const userInput = document.getElementById('userInput').value;
+  ipcRenderer.send('message-from-renderer', userInput);
+});
+
+ipcRenderer.on('reply-from-main', (event, response) => {
+  document.getElementById('response').textContent = response;
+});
+```
+#### 4.1.3 Main 프로세스 (main.js)
+```
+const { app, BrowserWindow, ipcMain } = require('electron');
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 800,
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  });
+
+  win.loadFile('index.html');
+}
+
+app.whenReady().then(() => {
+  createWindow();
+});
+
+ipcMain.on('message-from-renderer', (event, userMessage) => {
+  console.log(`Received message: ${userMessage}`);
+  const responseMessage = `Processed: ${userMessage}`;
+  event.reply('reply-from-main', responseMessage);
+});
+```
+- 사용자 입력을 input 필드에서 받아서 ipcRenderer.send()로 Main 프로세스에 전달합니다.
+- Main 프로세스는 메시지를 받아, 이를 처리하고 응답을 다시 event.reply()로 Renderer에 전송합니다.
+- Renderer 프로세스에서 응답을 받아 화면에 표시합니다.
+
+## 5. 주의할 점: 보안 고려사항
+Main 프로세스와 Renderer 프로세스 간의 통신은 강력한 기능을 제공하지만, 보안에 신경 써야 합니다. 특히, untrusted content가 포함된 경우, 공격자가 프로세스 간 통신을 이용해 시스템에 침투할 수 있습니다.
+
+Electron에서는 다음과 같은 보안 가이드를 따르는 것이 중요합니다.
+- 1. Node.js 통합 비활성화: 가능하다면, Renderer 프로세스에서 Node.js API 사용을 비활성화해야 합니다. 이는 webPreferences 옵션에서 nodeIntegration: false로 설정할 수 있습니다.
+- 2. 콘텐츠 보안 정책(CSP) 설정: 앱 내에서 실행되는 스크립트와 리소스에 대한 보안 정책을 설정하여 외부 공격을 방지해야 합니다.
+- 3. 프로세스 간 통신 필터링: ipcMain 이벤트 핸들러에서 입력값 검증을 철저히 하여, 악성 메시지를 차단할 수 있어야 합니다.
+
+## 6. 결론
+이번 포스트에서는 Main 프로세스와 Renderer 프로세스 간의 통신에 대해 다루었습니다. Electron에서 IPC를 활용해 데이터를 주고받는 방법을 이해하고, 이를 통해 더욱 복잡한 애플리케이션을 개발할 수 있습니다. 다음 포스트에서는 Electron의 네이티브 API 활용 방법에 대해 알아보겠습니다.
