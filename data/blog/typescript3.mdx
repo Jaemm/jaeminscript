@@ -1,0 +1,105 @@
+---
+title: 'TypeScript 시리즈 3: TypeScript의 객체 지향 프로그래밍 지원'
+date: '2024-10-22'
+lastmod: '2024-10-22'
+tags: ['typescript']
+draft: false
+summary: 'typescript'
+images: ['/static/images/']
+---
+
+![typescript](/static/images/typescriptlogo.png)
+
+## 목차
+  <TOCInline toc={props.toc} exclude="Introduction" />
+  
+## 1. 서론
+TypeScript는 객체 지향 프로그래밍(OOP)을 지원하는 기능을 제공합니다. 클래스, 인터페이스, 상속 등의 개념을 통해 더 구조화된 코드를 작성할 수 있습니다. 이번 글에서는 TypeScript의 객체 지향 프로그래밍 기능에 대해 알아보겠습니다.
+
+## 2. 클래스
+TypeScript에서 클래스를 정의하는 방법은 JavaScript와 유사하지만, 타입을 추가할 수 있습니다.
+```
+class Person {
+  name: string;
+  age: number;
+
+  constructor(name: string, age: number) {
+    this.name = name;
+    this.age = age;
+  }
+
+  greet(): string {
+    return `Hello, my name is ${this.name}.`;
+  }
+}
+
+const alice = new Person('Alice', 30);
+console.log(alice.greet()); // Hello, my name is Alice.
+```
+## 3. 상속
+TypeScript에서는 클래스를 상속하여 재사용할 수 있습니다. 기본 클래스의 속성과 메소드를 자식 클래스에서 사용할 수 있습니다.
+```
+class Employee extends Person {
+  position: string;
+
+  constructor(name: string, age: number, position: string) {
+    super(name, age);
+    this.position = position;
+  }
+
+  describe(): string {
+    return `${this.greet()} I work as a ${this.position}.`;
+  }
+}
+
+const bob = new Employee('Bob', 28, 'Developer');
+console.log(bob.describe()); // Hello, my name is Bob. I work as a Developer.
+```
+## 4. 인터페이스
+인터페이스는 객체의 구조를 정의하는 데 사용됩니다. 객체가 특정 구조를 따르도록 강제할 수 있습니다.
+```
+interface Greetable {
+  greet(): string;
+}
+
+class Dog implements Greetable {
+  name: string;
+
+  constructor(name: string) {
+    this.name = name;
+  }
+
+  greet(): string {
+    return `Woof! My name is ${this.name}.`;
+  }
+}
+
+const dog = new Dog('Buddy');
+console.log(dog.greet()); // Woof! My name is Buddy.
+```
+
+## 5. 접근 제한자
+TypeScript에서는 접근 제한자를 통해 클래스 속성과 메소드의 접근성을 제어할 수 있습니다.
+- public: 기본값으로, 클래스 외부에서 접근 가능
+- private: 해당 클래스 내에서만 접근 가능
+- protected: 해당 클래스와 자식 클래스에서 접근 가능
+```
+class Car {
+  private speed: number;
+
+  constructor() {
+    this.speed = 0;
+  }
+
+  public accelerate(): void {
+    this.speed += 10;
+  }
+
+  protected getSpeed(): number {
+    return this.speed;
+  }
+}
+```
+
+## 6. 결론
+이번 글에서는 TypeScript의 객체 지향 프로그래밍 기능에 대해 알아보았습니다. 클래스, 상속, 인터페이스, 접근 제한자 등을 활용하여 구조화된 코드를 작성할 수 있습니다. 다음 글에서는 TypeScript의 고급 기능인 제너릭에 대해 다루겠습니다!

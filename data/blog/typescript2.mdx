@@ -1,0 +1,74 @@
+---
+title: 'TypeScript 시리즈 2: TypeScript 기본 문법과 타입 시스템'
+date: '2024-10-22'
+lastmod: '2024-10-22'
+tags: ['typescript']
+draft: false
+summary: 'typescript'
+images: ['/static/images/']
+---
+
+![typescript](/static/images/typescriptlogo.png)
+
+## 목차
+  <TOCInline toc={props.toc} exclude="Introduction" />
+  
+## 1. 서론
+TypeScript는 정적 타입 시스템을 제공하여 코드의 안전성을 높이고, 더 나은 개발 경험을 제공합니다. 이번 글에서는 TypeScript의 기본 문법과 다양한 타입 시스템에 대해 알아보겠습니다.
+
+## 2. 기본 문법
+### 2.1 변수 선언
+TypeScript에서는 let, const, var를 사용하여 변수를 선언할 수 있습니다. 변수의 타입을 명시할 수 있으며, 기본적으로 JavaScript의 문법과 유사합니다.
+```
+let name: string = 'Alice';
+const age: number = 30;
+```
+### 2.2 함수 정의
+TypeScript에서는 함수의 매개변수와 반환값의 타입을 지정할 수 있습니다.
+```
+function greet(name: string): string {
+  return `Hello, ${name}!`;
+}
+
+console.log(greet(name)); // Hello, Alice!
+```
+## 3. 타입 시스템
+### 3.1 기본 타입
+TypeScript에서 제공하는 기본 타입은 다음과 같습니다.
+- string: 문자열
+- number: 숫자
+- boolean: 불리언
+- any: 어떤 타입이든 허용
+- void: 반환값이 없는 함수에서 사용
+
+### 3.2 배열과 튜플
+배열은 다음과 같이 정의할 수 있습니다.
+```
+let fruits: string[] = ['apple', 'banana', 'cherry'];
+```
+튜플은 고정된 길이의 배열로, 각 요소의 타입을 지정할 수 있습니다.
+```
+let person: [string, number] = ['Alice', 30];
+```
+### 3.3 객체 타입
+객체의 타입을 정의할 수 있으며, 인터페이스를 사용하여 타입을 정의하는 것이 일반적입니다.
+```
+interface Person {
+  name: string;
+  age: number;
+}
+
+let alice: Person = {
+  name: 'Alice',
+  age: 30,
+};
+```
+## 4. 타입 단언
+TypeScript에서는 as 키워드를 사용하여 타입을 단언할 수 있습니다. 이는 개발자가 변수가 특정 타입이라고 확신할 때 사용합니다.
+```
+let someValue: any = 'Hello, TypeScript!';
+let strLength: number = (someValue as string).length;
+```
+
+## 5. 결론
+이번 글에서는 TypeScript의 기본 문법과 타입 시스템에 대해 알아보았습니다. TypeScript를 사용하면 코드의 안정성을 높일 수 있으며, 다양한 타입 시스템을 활용하여 더욱 안전한 코드를 작성할 수 있습니다. 다음 글에서는 TypeScript의 객체 지향 프로그래밍 지원에 대해 다뤄보겠습니다!
