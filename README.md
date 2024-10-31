@@ -42,16 +42,27 @@ yarn dev
 ## 확장 / 사용자 정의
 
 `data/siteMetadata.js` - 사용자의 필요에 따라 수정되어야 하는 대부분의 사이트 관련 정보가 포함되어 있습니다.
+
 `data/authors/default.md` - 기본 작성자 정보(필수). 추가 작성자는 `data/authors`에 파일로 추가할 수 있습니다.
+
 `data/projectsData.js` - 프로젝트 페이지에서 스타일 카드를 생성하는 데 사용되는 데이터입니다.
+
 `data/headerNavLinks.js` - 탐색 링크.
+
 `data/logo.svg` - 자신의 로고로 바꿉니다.
+
 `data/blog` - 자신의 블로그 게시물로 대체합니다.
+
 `공개/정적` - 이미지 및 파비콘과 같은 자산을 저장합니다.
+
 `tailwind.config.js` 및 `css/tailwind.css` - 사이트의 전체적인 모양과 느낌을 변경하기 위해 수정할 수 있는 tailwind 구성 및 스타일시트입니다.
+
 `css/prism.css` - 코드 블록과 관련된 스타일을 제어합니다. 자유롭게 사용자 정의하고 선호하는 prismjs 테마를 사용하세요.
-`contentlayer.config.ts` - 사용된 콘텐츠 소스 및 MDX 플러그인 정의를 포함한 Contentlayer 구성입니다. 자세한 내용은
+
+`contentlayer.config.ts` - 사용된 콘텐츠 소스 및 MDX 플러그인 정의를 포함한 Contentlayer 구성입니다.
+
 `comComponents/MDXComponents.js` - 여기에 지정하여 고유한 JSX 코드 또는 React 구성 요소를 전달합니다. 그런 다음 `.mdx` 또는 `.md` 파일에서 직접 사용할 수 있습니다. 기본적으로 사용자 정의 링크, `next/image` 구성 요소, 목차 구성 요소 및 뉴스레터 양식이 전달됩니다.
+
 `레이아웃` - 페이지에 사용되는 기본 템플릿:
 - 현재 `PostLayout`, `PostSimple`, `PostBanner`의 3가지 게시물 레이아웃을 사용할 수 있습니다. `PostLayout`은 메타 및 작성자 정보가 포함된 기본 2열 레이아웃입니다. `PostSimple`은 `PostLayout`의 단순화된 버전인 반면, `PostBanner`는 배너 이미지를 제공합니다.
 - 블로그 목록 레이아웃에는 2가지가 있습니다. `ListLayout`은 검색 표시줄이 있는 템플릿 버전 1에서 사용되는 레이아웃이고, 현재 버전 2에서 사용되는 `ListLayoutWithTags`는 검색 표시줄을 생략하지만 태그에 대한 정보가 포함된 사이드바를 포함합니다.
